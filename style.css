@@ -1458,6 +1458,232 @@
   color: rgb(255, 255, 255); /* Exemplo: cor preta */
 }
 
+/* SEÇÃO COVER LETTER COM CLASSES BRASILEIRAS */
+        .arena-das-recomendacoes-lendarias {
+            padding: 100px 20px;
+            position: relative;
+            z-index: 2;
+            background: linear-gradient(45deg, rgba(255, 215, 0, 0.1), rgba(255, 140, 0, 0.1));
+        }
+
+        .container-dos-elogios-magnificos {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .titulo-da-fama-internacional {
+            font-size: 3.5rem;
+            background: linear-gradient(45deg, #ffd700, #ff8c00, #ffff00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 30px;
+            font-weight: bold;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+            animation: titulo-brilhante 4s ease-in-out infinite;
+        }
+
+        @keyframes titulo-brilhante {
+            0%, 100% { transform: scale(1); filter: brightness(1); }
+            50% { transform: scale(1.03); filter: brightness(1.2); }
+        }
+
+        .subtitulo-das-conquistas {
+            font-size: 1.4rem;
+            color: #ffd700;
+            margin-bottom: 60px;
+            opacity: 0.9;
+            font-style: italic;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .galeria-de-testemunhos-epicos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .cartao-da-recomendacao-dourada {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(25px);
+            border-radius: 25px;
+            padding: 40px;
+            border: 3px solid rgba(255, 215, 0, 0.4);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .cartao-da-recomendacao-dourada::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.08), transparent);
+            animation: girar-recomendacao 25s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes girar-recomendacao {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .cartao-da-recomendacao-dourada:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: #ffd700;
+            box-shadow: 0 30px 60px rgba(255, 215, 0, 0.3);
+        }
+
+        .aspas-da-sabedoria {
+            font-size: 4rem;
+            color: #ffd700;
+            opacity: 0.3;
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            font-family: serif;
+        }
+
+        .texto-da-recomendacao-sagrada {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #ffffff;
+            margin: 30px 0;
+            font-style: italic;
+            text-align: left;
+            position: relative;
+            z-index: 2;
+        }
+
+        .autor-da-recomendacao-ilustre {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .avatar-do-recomendador {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #ffd700, #ff8c00);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            flex-shrink: 0;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+        }
+
+        .info-do-recomendador {
+            text-align: left;
+        }
+
+        .nome-do-recomendador {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 5px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        .cargo-do-recomendador {
+            font-size: 0.95rem;
+            color: #ffffff;
+            opacity: 0.8;
+        }
+
+        .empresa-do-recomendador {
+            font-size: 0.9rem;
+            color: #ff8c00;
+            font-weight: bold;
+            margin-top: 3px;
+        }
+
+        .contador-de-elogios-cosmicos {
+            text-align: center;
+            margin-top: 60px;
+            padding: 30px;
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 20px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .numero-magico-de-recomendacoes {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #ffd700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+
+        .texto-do-contador {
+            font-size: 1.2rem;
+            color: #ffffff;
+            margin-top: 10px;
+            opacity: 0.9;
+        }
+
+        /* RESPONSIVIDADE PARA COVER LETTER */
+        @media (max-width: 768px) {
+            .arena-das-recomendacoes-lendarias {
+                padding: 80px 20px;
+            }
+
+            .titulo-da-fama-internacional {
+                font-size: 2.5rem;
+            }
+
+            .subtitulo-das-conquistas {
+                font-size: 1.2rem;
+            }
+
+            .galeria-de-testemunhos-epicos {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .cartao-da-recomendacao-dourada {
+                padding: 30px 25px;
+            }
+
+            .texto-da-recomendacao-sagrada {
+                font-size: 1rem;
+            }
+
+            .aspas-da-sabedoria {
+                font-size: 3rem;
+                top: 15px;
+                left: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .titulo-da-fama-internacional {
+                font-size: 2rem;
+            }
+
+            .cartao-da-recomendacao-dourada {
+                padding: 25px 20px;
+            }
+
+            .autor-da-recomendacao-ilustre {
+                gap: 15px;
+            }
+
+            .avatar-do-recomendador {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+        }
         
 
 

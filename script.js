@@ -59,6 +59,46 @@
             });
         });
 
+         // Efeito de paralaxe suave nos cartões
+        function aplicarEfeitoParalaxe() {
+            const cartoes = document.querySelectorAll('.cartao-da-recomendacao-dourada');
+            
+            window.addEventListener('scroll', () => {
+                const scrollTop = window.pageYOffset;
+                
+                cartoes.forEach((cartao, index) => {
+                    const velocidade = (index % 2 === 0) ? 0.5 : -0.3;
+                    const yPos = scrollTop * velocidade;
+                    cartao.style.transform = `translateY(${yPos}px)`;
+                });
+            });
+        }
+
+        // Animação de contador crescente
+        function animarContador() {
+            const contador = document.querySelector('.numero-magico-de-recomendacoes');
+            const numeroFinal = 15;
+            let numeroAtual = 0;
+            
+            const observer = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting) {
+                    const intervalo = setInterval(() => {
+                        numeroAtual++;
+                        contador.textContent = numeroAtual + '+';
+                        
+                        if (numeroAtual >= numeroFinal) {
+                            clearInterval(intervalo);
+                        }
+                    }, 100);
+                    
+                    observer.disconnect();
+                }
+            });
+            
+            observer.observe(contador);
+        }
+
+
         // Inicializar as funções quando a página carregar
         window.addEventListener('load', () => {
             criarEstrelasMalucas();
