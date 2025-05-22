@@ -1,0 +1,1463 @@
+ * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Hero Container */
+        .hero {
+            height: 100vh;
+            
+            background-image: 
+                linear-gradient(rgba(15, 20, 25, 0.7), rgba(15, 20, 25, 0.7)), 
+                url('imagens/image (11).webp'); 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 70% 20%, rgba(73, 4, 90, 0.244) 0%, transparent 50%),
+                radial-gradient(circle at 30% 80%, rgba(0, 0, 0, 0) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(2deg); }
+        }
+
+        
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(15, 20, 25, 0.222);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 2rem;
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+        }
+
+        .nav-item {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-item:hover {
+            color: #64ffda;
+            transform: translateY(-2px);
+        }
+
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #64ffda;
+            transition: width 0.3s ease;
+        }
+
+        .nav-item:hover::after {
+            width: 100%;
+        }
+
+        
+        .hero-content {
+            text-align: center;
+            z-index: 2;
+            max-width: 800px;
+            padding: 0 2rem;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: #a0aec0;
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+
+        .highlight-analista {
+            color: #ffd700;
+        }
+
+        .highlight-desenvolvedor {
+            color: #64ffda;
+        }
+
+        .highlight-sistemas {
+            color: #9f7aea;
+        }
+
+        
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+            animation: fadeInUp 1s ease-out 0.4s both;
+        }
+
+        .social-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .social-icon:hover {
+            background: rgba(100, 255, 218, 0.2);
+            border-color: #64ffda;
+            color: #64ffda;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(100, 255, 218, 0.3);
+        }
+
+        
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease-out 0.6s both;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: 2px solid transparent;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #64ffda, #4fd1c7);
+            color: #0f1419;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(100, 255, 218, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: white;
+            transform: translateY(-2px);
+        }
+
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        
+        @media (max-width: 768px) {
+            .nav-content {
+                gap: 1.5rem;
+                padding: 0 1rem;
+            }
+
+            .nav-item {
+                font-size: 0.8rem;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 200px;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar {
+                padding: 0.8rem 1rem;
+            }
+
+            .nav-content {
+                gap: 1rem;
+            }
+
+            .nav-item {
+                font-size: 0.7rem;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .social-icons {
+                gap: 1rem;
+            }
+
+            .social-icon {
+                width: 45px;
+                height: 45px;
+            }
+        }
+
+        /* Seção Sobre */
+        .secao-sobre {
+            min-height: 100vh;
+            position: relative;
+            background: linear-gradient(135deg, #000000 0%, #030307 50%, #04020a 100%);
+           
+            background-image: 
+                linear-gradient(rgba(10, 14, 39, 0.85), rgba(29, 31, 58, 0.85)),
+                url('imagens/image (11).webp'); 
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            padding: 100px 0;
+            color: white;
+            overflow: hidden;
+        }
+
+        /* Elementos de Fundo Animados */
+        .secao-sobre::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 25% 25%, rgba(100, 255, 218, 0.1) 0%, transparent 25%),
+                radial-gradient(circle at 75% 75%, rgba(7, 5, 10, 0.08) 0%, transparent 25%);
+            animation: pulso 8s ease-in-out infinite;
+        }
+
+        @keyframes pulso {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Elementos Geométricos Flutuantes */
+        .fundo-geometrico {
+            position: absolute;
+            border-radius: 20px;
+            border: 2px solid;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(10px);
+            animation: flutuar 15s ease-in-out infinite;
+        }
+
+        .geo-1 {
+            width: 200px;
+            height: 300px;
+            top: 15%;
+            left: 5%;
+            border-color: rgba(100, 255, 218, 0.3);
+            animation-delay: 0s;
+        }
+
+        .geo-2 {
+            width: 150px;
+            height: 250px;
+            top: 25%;
+            left: 15%;
+            border-color: rgba(56, 189, 248, 0.3);
+            animation-delay: 2s;
+        }
+
+        .geo-3 {
+            width: 300px;
+            height: 400px;
+            top: 10%;
+            right: 10%;
+            border-color: rgba(159, 122, 234, 0.3);
+            animation-delay: 4s;
+        }
+
+        .geo-4 {
+            width: 100px;
+            height: 150px;
+            bottom: 15%;
+            left: 8%;
+            border-color: rgba(251, 191, 36, 0.3);
+            animation-delay: 6s;
+        }
+
+        .geo-5 {
+            width: 180px;
+            height: 80px;
+            bottom: 10%;
+            right: 15%;
+            border-color: rgba(239, 68, 68, 0.3);
+            animation-delay: 8s;
+        }
+
+        @keyframes flutuar {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            25% { transform: translateY(-15px) rotate(2deg); }
+            50% { transform: translateY(-30px) rotate(0deg); }
+            75% { transform: translateY(-15px) rotate(-2deg); }
+        }
+
+        /* Grid do Conteúdo Principal */
+        .conteudo-sobre {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 4rem;
+            align-items: start;
+            margin-top: 2rem;
+        }
+
+        /* Card do Perfil */
+        .card-perfil {
+            background: rgba(5, 0, 0, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 2rem;
+            text-align: center;
+            position: sticky;
+            top: 120px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .imagem-perfil {
+            width: 100%;
+            height: 350px;
+            border-radius: 25px;
+            object-fit: cover;
+            margin-bottom: 1.5rem;
+            border: 3px solid rgba(100, 255, 218, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .imagem-perfil:hover {
+            transform: scale(1.02);
+            border-color: #64ffda;
+            box-shadow: 0 10px 30px rgba(100, 255, 218, 0.3);
+        }
+
+        .nome-perfil {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(45deg, #64ffda, #9f7aea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cargo-perfil {
+            color: #a0aec0;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Links Sociais no Perfil */
+        .redes-perfil {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .redes-perfil a {
+            width: 40px;
+            height: 40px;
+            background: rgba(100, 255, 218, 0.1);
+            border: 1px solid rgba(100, 255, 218, 0.3);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64ffda;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .redes-perfil a:hover {
+            background: rgba(100, 255, 218, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Conteúdo das Informações */
+        .conteudo-informacoes {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 3rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .titulo-secao {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .titulo-secao::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(45deg, #64ffda, #9f7aea);
+            border-radius: 2px;
+        }
+
+        .texto-sobre {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #e2e8f0;
+            margin-bottom: 3rem;
+            text-align: justify;
+        }
+
+        /* Grid de Informações de Contato */
+        .grid-contato {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .item-contato {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .item-contato::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(100, 255, 218, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .item-contato:hover::before {
+            left: 100%;
+        }
+
+        .item-contato:hover {
+            transform: translateY(-5px);
+            border-color: rgba(100, 255, 218, 0.3);
+            box-shadow: 0 10px 30px rgba(100, 255, 218, 0.1);
+        }
+
+        .rotulo-contato {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #64ffda;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .valor-contato {
+            font-size: 1rem;
+            color: #e2e8f0;
+            word-break: break-word;
+        }
+
+        .icone-contato {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        /* Badge de Status */
+        .badge-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #22c55e;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .ponto-status {
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: piscar 2s ease-in-out infinite;
+        }
+
+        @keyframes piscar {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Design Responsivo */
+        @media (max-width: 1024px) {
+            .conteudo-sobre {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .card-perfil {
+                position: static;
+                max-width: 400px;
+                margin: 0 auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .secao-sobre {
+                padding: 80px 0;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+
+            .titulo-secao {
+                font-size: 2rem;
+            }
+
+            .conteudo-informacoes {
+                padding: 2rem;
+            }
+
+            .grid-contato {
+                grid-template-columns: 1fr;
+            }
+
+            .fundo-geometrico {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card-perfil {
+                padding: 1.5rem;
+            }
+
+            .conteudo-informacoes {
+                padding: 1.5rem;
+            }
+
+            .titulo-secao {
+                font-size: 1.8rem;
+            }
+
+            .texto-sobre {
+                font-size: 1rem;
+            }
+        }
+
+        .universo-profissional {
+            background: radial-gradient(ellipse at center, #0f0f23 0%, #000000 70%);
+            min-height: 100vh;
+            font-family: 'Courier New', monospace;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .chuva-de-estrelas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .estrelinha-perdida {
+            position: absolute;
+            background: #ffffff;
+            border-radius: 50%;
+            animation: piscar-que-nem-louco 2s infinite alternate;
+        }
+
+        .estrelinha-perdida:nth-child(1) { top: 10%; left: 20%; width: 2px; height: 2px; animation-delay: 0s; }
+        .estrelinha-perdida:nth-child(2) { top: 20%; left: 80%; width: 1px; height: 1px; animation-delay: 0.5s; }
+        .estrelinha-perdida:nth-child(3) { top: 60%; left: 10%; width: 3px; height: 3px; animation-delay: 1s; }
+        .estrelinha-perdida:nth-child(4) { top: 80%; left: 90%; width: 2px; height: 2px; animation-delay: 1.5s; }
+        .estrelinha-perdida:nth-child(5) { top: 30%; left: 60%; width: 1px; height: 1px; animation-delay: 2s; }
+        .estrelinha-perdida:nth-child(6) { top: 50%; left: 30%; width: 2px; height: 2px; animation-delay: 2.5s; }
+
+        @keyframes piscar-que-nem-louco {
+            0% { opacity: 0.3; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .cabecalho-da-nasa {
+            text-align: center;
+            padding: 60px 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .titulo-missao-espacial {
+            font-size: 3.5rem;
+            background: linear-gradient(45deg, #00ffff, #ff00ff, #ffff00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            animation: brilhar-como-sol 3s ease-in-out infinite;
+        }
+
+        @keyframes brilhar-como-sol {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.3); }
+        }
+
+        .subtitulo-viagem-temporal {
+            color: #00ffaa;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            opacity: 0.8;
+        }
+
+        .container-linha-temporal {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .linha-do-tempo-maluca {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .linha-do-tempo-maluca::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to bottom, #00ffff, #ff00ff, #ffff00, #00ff00);
+            transform: translateX(-50%);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
+            animation: pulsar-linha 2s ease-in-out infinite;
+        }
+
+        @keyframes pulsar-linha {
+            0%, 100% { box-shadow: 0 0 15px rgba(0, 255, 255, 0.6); }
+            50% { box-shadow: 0 0 25px rgba(255, 0, 255, 0.8); }
+        }
+
+        .evento-historico {
+            position: relative;
+            margin: 50px 0;
+            opacity: 0;
+            animation: aparecer-do-nada 0.8s ease-out forwards;
+        }
+
+        .evento-historico:nth-child(1) { animation-delay: 0.2s; }
+        .evento-historico:nth-child(2) { animation-delay: 0.4s; }
+        .evento-historico:nth-child(3) { animation-delay: 0.6s; }
+        .evento-historico:nth-child(4) { animation-delay: 0.8s; }
+        .evento-historico:nth-child(5) { animation-delay: 1s; }
+
+        @keyframes aparecer-do-nada {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .lado-esquerdo {
+            display: flex;
+            justify-content: flex-end;
+            padding-right: 60px;
+        }
+
+        .lado-direito {
+            display: flex;
+            justify-content: flex-start;
+            padding-left: 60px;
+        }
+
+        .cartao-nave-espacial {
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0e1621);
+            border: 2px solid #00ffaa;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 450px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 255, 170, 0.3);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .cartao-nave-espacial:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 255, 170, 0.5);
+            border-color: #ff00ff;
+        }
+
+        .cartao-nave-espacial::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #00ffaa, #ff00ff, #00ffff);
+            border-radius: 20px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .cartao-nave-espacial:hover::before {
+            opacity: 0.7;
+        }
+
+        .icone-empresa {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.4);
+            animation: girar-devagar 10s linear infinite;
+        }
+
+        @keyframes girar-devagar {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .cargo-espacial {
+            font-size: 2rem;
+            color: #00ffaa;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(0, 255, 170, 0.5);
+        }
+
+        .empresa-maluquinha {
+            font-size: 1.4rem;
+            color: #ff00ff;
+            margin-bottom: 10px;
+            text-decoration: underline;
+            font-weight: bold;
+        }
+
+        .periodo-trabalhado {
+            color: #00ffff;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .duracao-maluca {
+            color: #ffff00;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .modalidade-trabalho {
+            color: #ffffff;
+            font-size: 1.1rem;
+            opacity: 0.9;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 5px 15px;
+            border-radius: 15px;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .ponto-temporal {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #00ffaa, #ff00ff);
+            border-radius: 50%;
+            border: 4px solid #ffffff;
+            box-shadow: 0 0 20px rgba(0, 255, 170, 0.8);
+            z-index: 3;
+            animation: pulsar-ponto 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulsar-ponto {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.3); }
+        }
+
+        .conexao-temporal {
+            position: absolute;
+            top: 50%;
+            width: 50px;
+            height: 2px;
+            background: linear-gradient(90deg, #00ffaa, #ff00ff);
+            box-shadow: 0 0 10px rgba(0, 255, 170, 0.6);
+        }
+
+        .lado-esquerdo .conexao-temporal {
+            right: -2px;
+        }
+
+        .lado-direito .conexao-temporal {
+            left: -2px;
+        }
+
+        @media (max-width: 768px) {
+            .titulo-missao-espacial {
+                font-size: 2.5rem;
+            }
+
+            .lado-esquerdo,
+            .lado-direito {
+                justify-content: center;
+                padding: 0 20px;
+            }
+
+            .cartao-nave-espacial {
+                max-width: 100%;
+            }
+
+            .linha-do-tempo-maluca::before {
+                left: 20px;
+            }
+
+            .ponto-temporal {
+                left: 20px;
+            }
+
+            .conexao-temporal {
+                display: none;
+            }
+        }
+
+         /* ESTILOS PARA SEÇÃO CERTIFICADOS E SKILLS */
+        .secao-conhecimentos-galacticos {
+            padding: 80px 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .container-duplo-espacial {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: start;
+        }
+
+        .painel-credenciais-espaciais,
+        .painel-poderes-especiais {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(20px);
+            border-radius: 40px;
+            padding: 40px;
+            border: 2px solid rgba(0, 255, 170, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .painel-credenciais-espaciais::before,
+        .painel-poderes-especiais::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(0, 255, 170, 0.05), transparent);
+            animation: girar-fundo 15s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes girar-fundo {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .titulo-painel-magico {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #00ffaa, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            margin-bottom: 40px;
+            font-weight: bold;
+            text-shadow: 0 0 20px rgba(0, 255, 170, 0.5);
+        }
+
+        .lista-conquistas-heroicas {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .medalha-conquistada {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(0, 255, 170, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .medalha-conquistada:hover {
+            transform: translateX(10px);
+            border-color: #00ffaa;
+            box-shadow: 0 10px 30px rgba(0, 255, 170, 0.3);
+        }
+
+        .medalha-conquistada::before {
+            content: '';
+            position: absolute;
+            left: -100%;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 170, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .medalha-conquistada:hover::before {
+            left: 100%;
+        }
+
+        .icone-medalha {
+            font-size: 2rem;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(45deg, #00ffaa, #ff00ff);
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .info-medalha {
+            flex: 1;
+        }
+
+        .nome-certificado {
+            color: #00ffaa;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-shadow: 0 0 10px rgba(0, 255, 170, 0.3);
+        }
+
+        .instituicao-respeitavel {
+            color: #ffffff;
+            font-size: 1rem;
+            opacity: 0.8;
+            font-style: italic;
+        }
+
+        .arsenal-de-poderes {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .poder-especial {
+            display: flex;
+            align-items: flex-start;
+            gap: 25px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(0, 255, 170, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .poder-especial:hover {
+            transform: translateY(-5px);
+            border-color: #ff00ff;
+            box-shadow: 0 15px 35px rgba(255, 0, 255, 0.3);
+        }
+
+        .poder-especial::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 0, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .poder-especial:hover::after {
+            left: 100%;
+        }
+
+        .icone-poder {
+            font-size: 2.5rem;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            border-radius: 15px;
+            flex-shrink: 0;
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.4);
+        }
+
+        .detalhes-poder {
+            flex: 1;
+        }
+
+        .nome-poder {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 12px;
+            text-shadow: 0 0 10px rgba(255, 0, 255, 0.3);
+        }
+
+        .css-power .nome-poder { color: #1A9DBE; }
+        .html-power .nome-poder { color: #EC710C; }
+        .js-power .nome-poder { color: #F1FD00; }
+        .python-power .nome-poder { color: #1D9C53; }
+        .photoshop-power .nome-poder { color: #180F7E; }
+        .community-power .nome-poder { color: #27647A; }
+
+        .descricao-poder {
+            color: #ffffff;
+            font-size: 1rem;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        /* RESPONSIVIDADE PARA CERTIFICADOS E SKILLS */
+        @media (max-width: 1024px) {
+            .container-duplo-espacial {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .secao-conhecimentos-galacticos {
+                padding: 60px 20px;
+            }
+
+            .painel-credenciais-espaciais,
+            .painel-poderes-especiais {
+                padding: 30px 20px;
+            }
+
+            .titulo-painel-magico {
+                font-size: 2rem;
+            }
+
+            .medalha-conquistada,
+            .poder-especial {
+                padding: 15px;
+                gap: 15px;
+            }
+
+            .nome-certificado,
+            .nome-poder {
+                font-size: 1.1rem;
+            }
+
+            .instituicao-respeitavel,
+            .descricao-poder {
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Efeito de estrelas no fundo */
+        .chuva-de-estrelas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .estrelinha-perdida {
+            position: absolute;
+            background: #fff;
+            border-radius: 50%;
+            animation: piscar-estrela 3s infinite;
+        }
+
+        @keyframes piscar-estrela {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        /* SEÇÃO DE CONTATO COM CLASSES DEBOCHADAS */
+        .zona-de-conversa-intergalactica {
+            padding: 100px 20px;
+            position: relative;
+            z-index: 2;
+            background: linear-gradient(45deg, rgba(255, 0, 255, 0.1), rgba(0, 255, 255, 0.1));
+        }
+
+        .container-das-palavras-magicas {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .titulo-do-papo-universal {
+            font-size: 3.5rem;
+            background: linear-gradient(45deg, #ff00ff, #00ffff, #ffff00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 30px;
+            font-weight: bold;
+            text-shadow: 0 0 30px rgba(255, 0, 255, 0.5);
+            animation: titulo-doidao 3s ease-in-out infinite;
+        }
+
+        @keyframes titulo-doidao {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .subtitulo-misterioso {
+            font-size: 1.3rem;
+            color: #00ffaa;
+            margin-bottom: 50px;
+            opacity: 0.8;
+            font-style: italic;
+        }
+
+        .formulario-das-mensagens-secretas {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(25px);
+            border-radius: 30px;
+            padding: 50px;
+            border: 3px solid rgba(255, 0, 255, 0.3);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .formulario-das-mensagens-secretas::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 0, 255, 0.08), transparent);
+            animation: girar-formulario 20s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes girar-formulario {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .campo-da-informacao-vital {
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .label-do-campo-obrigatorio {
+            display: block;
+            font-size: 1.1rem;
+            color: #00ffaa;
+            margin-bottom: 10px;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(0, 255, 170, 0.3);
+        }
+
+        .input-da-digitacao-sagrada,
+        .textarea-dos-pensamentos-profundos {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(0, 255, 170, 0.3);
+            border-radius: 15px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .input-da-digitacao-sagrada:focus,
+        .textarea-dos-pensamentos-profundos:focus {
+            outline: none;
+            border-color: #ff00ff;
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.4);
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(1.02);
+        }
+
+        .input-da-digitacao-sagrada::placeholder,
+        .textarea-dos-pensamentos-profundos::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+            font-style: italic;
+        }
+
+        .textarea-dos-pensamentos-profundos {
+            height: 120px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .botao-do-envio-cosmico {
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            border: none;
+            padding: 18px 40px;
+            border-radius: 25px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 10px 25px rgba(255, 0, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .botao-do-envio-cosmico::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .botao-do-envio-cosmico:hover::before {
+            left: 100%;
+        }
+
+        .botao-do-envio-cosmico:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 35px rgba(255, 0, 255, 0.5);
+        }
+
+        .botao-do-envio-cosmico:active {
+            transform: translateY(-1px) scale(1.02);
+        }
+
+        .icones-de-contato-alien {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .icone-social-intergalactico {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #00ffaa, #ff00ff);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 255, 170, 0.3);
+        }
+
+        .icone-social-intergalactico:hover {
+            transform: rotate(360deg) scale(1.2);
+            box-shadow: 0 10px 25px rgba(255, 0, 255, 0.5);
+        }
+
+        .mensagem-de-sucesso-epica {
+            display: none;
+            background: linear-gradient(45deg, #00ff00, #00ffaa);
+            color: #000;
+            padding: 20px;
+            border-radius: 15px;
+            font-weight: bold;
+            margin-top: 20px;
+            animation: aparecer-mensagem 0.5s ease-out;
+        }
+
+        @keyframes aparecer-mensagem {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* RESPONSIVIDADE PARA CONTATO */
+        @media (max-width: 768px) {
+            .zona-de-conversa-intergalactica {
+                padding: 80px 20px;
+            }
+
+            .titulo-do-papo-universal {
+                font-size: 2.5rem;
+            }
+
+            .formulario-das-mensagens-secretas {
+                padding: 30px 20px;
+            }
+
+            .subtitulo-misterioso {
+                font-size: 1.1rem;
+            }
+
+            .icones-de-contato-alien {
+                gap: 20px;
+            }
+
+            .icone-social-intergalactico {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .titulo-do-papo-universal {
+                font-size: 2rem;
+            }
+
+            .botao-do-envio-cosmico {
+                padding: 15px 30px;
+                font-size: 1rem;
+            }
+        }
+        
+        a {
+  text-decoration: none;
+  color: rgb(255, 255, 255); /* Exemplo: cor preta */
+}
+
+        
+
+
