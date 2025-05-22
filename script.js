@@ -97,7 +97,25 @@
             
             observer.observe(contador);
         }
-
+       // Criar mais cometas aleatórios
+        function criarCometasAleatorios() {
+            const footer = document.querySelector('.rodape-do-universo-digital');
+            
+            setInterval(() => {
+                if (Math.random() < 0.3) { // 30% de chance
+                    const cometa = document.createElement('div');
+                    cometa.className = 'cometa-decorativo';
+                    cometa.textContent = '☄️';
+                    cometa.style.top = Math.random() * 80 + '%';
+                    footer.appendChild(cometa);
+                    
+                    // Remover o cometa após a animação
+                    setTimeout(() => {
+                        cometa.remove();
+                    }, 10000);
+                }
+            }, 5000);
+        }
 
         // Inicializar as funções quando a página carregar
         window.addEventListener('load', () => {
