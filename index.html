@@ -7,6 +7,58 @@
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
     <link rel="icon" type="image/png" sizes="32x32" href="imagens/galaxy.png">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+    <script>
+
+        (function() {
+            emailjs.init("LJOdCYsDU60DIL7M2");
+        })();
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const formulario = document.getElementById('formulario-cosmico');
+    const botaoEnviar = document.querySelector('.botao-do-envio-cosmico');
+    const mensagemSucesso = document.getElementById('mensagem-sucesso');
+    
+    formulario.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        
+        botaoEnviar.disabled = true;
+        botaoEnviar.innerHTML = '🌀 ENVIANDO...';
+        
+        
+        const templateParams = {
+            from_name: document.getElementById('nome-do-terrano').value,
+            reply_to: document.getElementById('email-quantico').value,
+            message: document.getElementById('mensagem-interdimensional').value
+        };
+        
+        // Enviar email
+        emailjs.send('service_d6gokwd', 'template_1997u14', templateParams)
+            .then(function(response) {
+                // Sucesso
+                botaoEnviar.disabled = false;
+                botaoEnviar.innerHTML = '🌟 ENVIAR PARA O UNIVERSO';
+                mensagemSucesso.style.display = 'block';
+                formulario.reset();
+                
+                // Esconder mensagem após 5 segundos
+                setTimeout(() => {
+                    mensagemSucesso.style.display = 'none';
+                }, 5000);
+                
+            }, function(error) {
+                // Erro
+                botaoEnviar.disabled = false;
+                botaoEnviar.innerHTML = '🌟 ENVIAR PARA O UNIVERSO';
+                alert('Erro ao enviar mensagem! Tente novamente.');
+                console.log('ERRO:', error);
+            });
+    });
+});
+    </script>
 </head>
 <body class="universo-profissional">
 
@@ -30,22 +82,23 @@
             <p class="hero-subtitle">
                 <span class="highlight-analista">Analista</span> e 
                 <span class="highlight-desenvolvedor">Desenvolvedor</span> de 
-                <span class="highlight-sistemas">Sistemas</span>
+                <span class="highlight-sistemas">Sistemas</span> ,
+                <span class="highlight-designer">Designer</span>
             </p>
 
             <!-- Social Icons -->
             <div class="social-icons">
-                <a href="#" class="social-icon" title="Behance">
+                <a href="https://www.behance.net/brunzlee/projects" class="social-icon" title="Behance">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M7.5 11.5c0-1.1-.9-2-2-2H3v4h2.5c1.1 0 2-.9 2-2zM3 6h2c1.1 0 2 .9 2 2s-.9 2-2 2H3V6zm11-1h4v1h-4V5zm1.5 4.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM0 3v18h24V3H0zm8 10.5c0 1.9-1.6 3.5-3.5 3.5H0V7h4.5C6.4 7 8 8.6 8 10.5v3zm8 0c0-2.8 2.2-5 5-5s5 2.2 5 5-2.2 5-5 5-5-2.2-5-5z"/>
                     </svg>
                 </a>
-                <a href="#" class="social-icon" title="LinkedIn">
+                <a href="https://www.linkedin.com/in/profpe/" class="social-icon" title="LinkedIn">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
                     </svg>
                 </a>
-                <a href="#" class="social-icon" title="GitHub">
+                <a href="https://github.com/paulofontes-cyber" class="social-icon" title="GitHub">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
                     </svg>
@@ -277,6 +330,223 @@
 
         </div>
     </div>
+
+    <section id="projetos" class="secao-projetos-galacticos">
+    <div class="container-projetos-espaciais">
+        
+        <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+        <div class="particle" style="left: 20%; animation-delay: 2s;"></div>
+        <div class="particle" style="left: 30%; animation-delay: 4s;"></div>
+        <div class="particle" style="left: 40%; animation-delay: 6s;"></div>
+        <div class="particle" style="left: 50%; animation-delay: 8s;"></div>
+        <div class="particle" style="left: 60%; animation-delay: 10s;"></div>
+        <div class="particle" style="left: 70%; animation-delay: 12s;"></div>
+        <div class="particle" style="left: 80%; animation-delay: 14s;"></div>
+        <div class="particle" style="left: 90%; animation-delay: 16s;"></div>
+
+        
+        <div class="fundo-geometrico geo-projeto-1"></div>
+        <div class="fundo-geometrico geo-projeto-2"></div>
+        <div class="fundo-geometrico geo-projeto-3"></div>
+
+        
+        <div class="cabecalho-projetos-cosmicos">
+            <h2 class="titulo-projetos-espaciais">
+                🚀 MISSÕES CONCLUÍDAS
+            </h2>
+            <p class="subtitulo-projetos-galacticos">
+                Projetinhos da Faculdade *~*
+            </p>
+            <div class="linha-neon-projetos"></div>
+        </div>
+
+       
+        <div class="grid-projetos-espaciais">
+            
+            <!-- PROJETO 1 -->
+            <div class="cartao-projeto-cosmico">
+                <div class="tela-projeto-holografica">
+                    <img src="imagens/galaxy (2).png" alt="Projeto 1" class="imagem-projeto-espacial">
+                    <div class="overlay-projeto-magico">
+                        <div class="icones-acao-projeto">
+                            <a href="Portfólio - 1241181583/1 – PROJETO JOGO NÚMERO OCULTO/index.html" class="botao-acao-cosmico" title="Ver Projeto">👽</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="info-projeto-detalhada">
+                    <h3 class="nome-projeto-legendario">Número Misterioso ~.~</h3>
+                    <p class="descricao-projeto-epica">Para um trabalho da faculdade, utilizei Css, JAVASCRIPT e HTML.</p>
+                    <div class="tags-tecnologia-espaciais">
+                        <span class="tag-tech">HTML</span>
+                        <span class="tag-tech">CSS</span>
+                        <span class="tag-tech">JS</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PROJETO 2 -->
+            <div class="cartao-projeto-cosmico">
+                <div class="tela-projeto-holografica">
+                    <img src="imagens/planetinha.png" alt="Projeto 2" class="imagem-projeto-espacial">
+                    <div class="overlay-projeto-magico">
+                        <div class="icones-acao-projeto">
+                            <a href="Portfólio - 1241181583/3 – LISTA DE TAREFAS (OU QUIZ)/index.html" class="botao-acao-cosmico" title="Ver Projeto">👽</a>
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="info-projeto-detalhada">
+                    <h3 class="nome-projeto-legendario">Lista de Tarefas ^o^</h3>
+                    <p class="descricao-projeto-epica">Para um trabalho da faculdade, utilizei Css, JAVASCRIPT e HTML.</p>
+                    <div class="tags-tecnologia-espaciais">
+                        <span class="tag-tech">HTML</span>
+                        <span class="tag-tech">CSS</span>
+                        <span class="tag-tech">JAVASCRIPT</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PROJETO 3 -->
+            <div class="cartao-projeto-cosmico">
+                <div class="tela-projeto-holografica">
+                    <img src="imagens/alienmuitoloco.png" alt="Projeto 3" class="imagem-projeto-espacial">
+                    <div class="overlay-projeto-magico">
+                        <div class="icones-acao-projeto">
+                            <a href="Portfólio - 1241181583/2 – PROJETO CALCULADORA/index.html" class="botao-acao-cosmico" title="Ver Projeto">👽</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="info-projeto-detalhada">
+                    <h3 class="nome-projeto-legendario">Projeto Calculadora (┬┬﹏┬┬)</h3>
+                    <p class="descricao-projeto-epica">Para um trabalho da faculdade, utilizei Css, JAVASCRIPT e HTML.</p>
+                    <div class="tags-tecnologia-espaciais">
+                        <span class="tag-tech">HTML</span>
+                        <span class="tag-tech">CSS</span>
+                        <span class="tag-tech">JAVASCRIPT</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PROJETO 4 -->
+            <div class="cartao-projeto-cosmico">
+                <div class="tela-projeto-holografica">
+                    <img src="imagens/buraquito.png" alt="Projeto 4" class="imagem-projeto-espacial">
+                    <div class="overlay-projeto-magico">
+                        <div class="icones-acao-projeto">
+                            <a href="Portfólio - 1241181583/4 – LISTA TAREFAS (KANBAN)/index.html" class="botao-acao-cosmico" title="Ver Projeto">👽</a>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="info-projeto-detalhada">
+                    <h3 class="nome-projeto-legendario">Lista de Tarefas KANBAN ಥ_ಥ</h3>
+                    <p class="descricao-projeto-epica">Para um trabalho da faculdade, utilizei Css, JAVASCRIPT e HTML.</p>
+                    <div class="tags-tecnologia-espaciais">
+                        <span class="tag-tech">HTML</span>
+                        <span class="tag-tech">CSS</span>
+                        <span class="tag-tech">JAVASCRIPT</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PROJETO 5 -->
+            <div class="cartao-projeto-cosmico">
+                <div class="tela-projeto-holografica">
+                    <img src="imagens/discobizarro.png" alt="Projeto 5" class="imagem-projeto-espacial">
+                    <div class="overlay-projeto-magico">
+                        <div class="icones-acao-projeto">
+                            <a href="Portfólio - 1241181583/5 – SELECIONE UM CARRO/index.html" class="botao-acao-cosmico" title="Ver Projeto">👽</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="info-projeto-detalhada">
+                    <h3 class="nome-projeto-legendario">Corrida de Carro (●'◡'●)</h3>
+                    <p class="descricao-projeto-epica">Para um trabalho da faculdade, utilizei Css, JAVASCRIPT e HTML.</p>
+                    <div class="tags-tecnologia-espaciais">
+                        <span class="tag-tech">HTML</span>
+                        <span class="tag-tech">CSS</span>
+                        <span class="tag-tech">JAVASCRIPT</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PROJETO 6 -->
+            <div class="cartao-projeto-cosmico">
+                <div class="tela-projeto-holografica">
+                    <img src="imagens/luazita.png" alt="Projeto 6" class="imagem-projeto-espacial">
+                    <div class="overlay-projeto-magico">
+                        <div class="icones-acao-projeto">
+                            <a href="Portfólio - 1241181583/6 – JOGO DA MEMÓRIA/index.html" class="botao-acao-cosmico" title="Ver Projeto">👽</a>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="info-projeto-detalhada">
+                    <h3 class="nome-projeto-legendario">Jogo da Memória ╰(*°▽°*)╯</h3>
+                    <p class="descricao-projeto-epica">Para um trabalho da faculdade, utilizei Css, JAVASCRIPT e HTML.</p>
+                    <div class="tags-tecnologia-espaciais">
+                        <span class="tag-tech">HTML</span>
+                        <span class="tag-tech">CSS</span>
+                        <span class="tag-tech">JAVASCRIPT</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PROJETO 7 -->
+            <div class="cartao-projeto-cosmico">
+                <div class="tela-projeto-holografica">
+                    <img src="imagens/estrelinha.png" alt="Projeto 7" class="imagem-projeto-espacial">
+                    <div class="overlay-projeto-magico">
+                        <div class="icones-acao-projeto">
+                            <a href="Portfólio - 1241181583/7 – CONTA DIGITAL/index.html" class="botao-acao-cosmico" title="Ver Projeto">👽</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="info-projeto-detalhada">
+                    <h3 class="nome-projeto-legendario">App de Banco (❁´◡`❁)</h3>
+                    <p class="descricao-projeto-epica">Para um trabalho da faculdade, utilizei Css, JAVASCRIPT e HTML.</p>
+                    <div class="tags-tecnologia-espaciais">
+                        <span class="tag-tech">HTML</span>
+                        <span class="tag-tech">CSS</span>
+                        <span class="tag-tech">JAVASCRIPT</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PROJETO 8 -->
+            <div class="cartao-projeto-cosmico">
+                <div class="tela-projeto-holografica">
+                    <img src="imagens/foguetito.png" alt="Projeto 8" class="imagem-projeto-espacial">
+                    <div class="overlay-projeto-magico">
+                        <div class="icones-acao-projeto">
+                            <a href="Portfólio - 1241181583/8 – LAMPADA/index.html" class="botao-acao-cosmico" title="Ver Projeto">👽</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="info-projeto-detalhada">
+                    <h3 class="nome-projeto-legendario">Lâmpada Mágica ¬_¬ </h3>
+                    <p class="descricao-projeto-epica">Para um trabalho da faculdade, utilizei Css, JAVASCRIPT e HTML.</p>
+                    <div class="tags-tecnologia-espaciais">
+                        <span class="tag-tech">HTML</span>
+                        <span class="tag-tech">CSS</span>
+                        <span class="tag-tech">JAVASCRIPT</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+            <p class="subtitulo-projetos-galacticos">
+            Me contrate, e ai vai ter mais coisas aqui. (～￣▽￣)～
+            </p>
+        <div class="zona-botao-explorar">
+            <a href="#" class="botao-explorar-mais-projetos">
+                🌌 MAIS EM BREVE...
+            </a>
+        </div>
+    </div>
+</section>
+
     <div class="linha-divisoria-cosmica"></div>
     <!-- SEÇÃO CERTIFICADOS E SKILLS -->
     <div id="Skills" class="secao-conhecimentos-galacticos">
@@ -506,7 +776,7 @@
     <div class="linha-divisoria-cosmica"></div>
 
     <!-- SEÇÃO DE CONTATO -->
-    <section class="zona-de-conversa-intergalactica">
+    <section id="contato" class="zona-de-conversa-intergalactica">
         <div class="container-das-palavras-magicas">
             <h2 class="titulo-do-papo-universal">
                 🚀 VAMOS CONVERSAR?
@@ -516,7 +786,7 @@
                 Envie sua mensagem através do espaço-tempo digital ✨
             </p>
 
-            <form class="formulario-das-mensagens-secretas" id="formulario-cosmico">
+            <form id="formulario-cosmico" class="formulario-das-mensagens-secretas">
                 <div class="campo-da-informacao-vital">
                     <label class="label-do-campo-obrigatorio" for="nome-do-terrano">
                         👤 SEU NOME TERRESTRE
@@ -636,5 +906,6 @@
             </p>
         </div>
 
+    <script src="script.js"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-// Adicionar mais estrelas dinamicamente
+
         function criarEstrelasMalucas() {
             const chuvaDeEstrelas = document.querySelector('.chuva-de-estrelas');
             
@@ -116,6 +116,40 @@
                 }
             }, 5000);
         }
+
+        
+document.addEventListener('DOMContentLoaded', function() {
+    const cartoesProjeto = document.querySelectorAll('.cartao-projeto-cosmico');
+    
+    cartoesProjeto.forEach(cartao => {
+        cartao.addEventListener('mouseenter', function() {
+            // Adiciona efeito de brilho extra
+            this.style.boxShadow = '0 20px 60px rgba(0, 255, 255, 0.4), 0 0 50px rgba(106, 13, 173, 0.3)';
+        });
+        
+        cartao.addEventListener('mouseleave', function() {
+            // Remove efeito de brilho extra
+            this.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.3)';
+        });
+    });
+    
+    // Efeito de loading para imagens
+    const imagensProjeto = document.querySelectorAll('.imagem-projeto-espacial');
+    
+    imagensProjeto.forEach(img => {
+        img.addEventListener('load', function() {
+            this.style.opacity = '1';
+            this.style.transform = 'scale(1)';
+        });
+        
+        // Define estado inicial
+        img.style.opacity = '0';
+        img.style.transform = 'scale(0.8)';
+        img.style.transition = 'all 0.6s ease';
+    });
+});
+
+
 
         // Inicializar as funções quando a página carregar
         window.addEventListener('load', () => {
