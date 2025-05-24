@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da Memória Espacial</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1 class="titulo">🚀 MEMÓRIA GALÁCTICA 🚀</h1>
+    
+    <div class="info-jogo">
+        <div class="contador">
+            <strong>Tentativas: <span id="tentativasAtuais">0</span></strong>
+        </div>
+        <div class="historico">
+            <strong>Histórico de Jogadas:</strong>
+            <div class="lista-historico" id="listaHistorico"></div>
+        </div>
+    </div>
+
+    <div class="painel-jogo" id="painelJogo"></div>
+    
+    <button class="botao-reiniciar" onclick="reiniciarJogo()">🔄 NOVA GALÁXIA</button>
+
+    <div class="mensagem-parabens" id="mensagemParabens">
+        <h2>🎉 PARABÉNS! 🎉</h2>
+        <p>Você explorou toda a galáxia!</p>
+        <p>Tentativas: <span id="tentativasFinais"></span></p>
+    </div>
+
+    <div class="creditos">desenhado e desenvolvido por paulo fontes</div>
+
+    <script>
+        class JogoMemoria {
+            constructor() {
+                this.simbolosEspaciais = ['🛸', '🚀', '👽', '🛰️', '🌙', '⭐'];
+                this.cartas = [];
+                this.cartasViradas = [];
+                this.tentativas = 0;
+                this.paresEncontrados = 0;
+                this.jogoAtivo = true;
+                this.inicializarJogo();
+                this.carregarHistorico();
+            }
+
+            inicializarJogo() {
+                this.criarCartas();
+                this.embaralharCartas();
+                this.renderizarCartas();
+                this.tentativas = 0;
+                this.paresEncontrados = 0;
+                this.jogoAtivo = true;
+                this.atualizarContador();
+            }
+
+            criarCartas() {
+                this.cartas = [];
+                this.simbolosEspaciais.forEach(simbolo => {
+                    this.cartas.push(simbolo, simbolo);
+                });
+            }
+
+            embaralharCartas() {
+                for (let i = this.cartas.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [this.cartas[i], this.cartas[j]] = [this.cartas[j], this.cartas[i]];
+                }
+            }
+
+            renderizarCartas() {
+                const painel = document.getElementById('painelJogo');
+                painel.innerHTML = '';
+                
+                this.cartas.forEach((simbolo, indice) => {
+                    const elementoCarta = document.createElement('div');
+                    elementoCarta.className = 'carta';
+                    elementoCarta.dataset.indice = indice;
+                    elementoCarta.innerHTML = `
+                        <div class="lado-carta tras"></div>
+                        <div class="lado-carta frente">${simbolo}</div>
+                    `;
+                    elementoCarta.addEventListener('click', () => this.virarCarta(indice));
+                    painel.appendChild(elementoCarta);
+                });
+            }
+
+            virarCarta(indice) {
+                if (!this.jogoAtivo || this.cartasViradas.length >= 2) return;
+                
+                const elementoCarta = document.querySelector(`[data-indice="${indice}"]`);
+                if (elementoCarta.classList.contains('virada')) return;
+
+                elementoCarta.classList.add('virada');
+                this.cartasViradas.push(indice);
+
+                if (this.cartasViradas.length === 2) {
+                    this.jogoAtivo = false;
+                    setTimeout(() => this.verificarPar(), 1000);
+                }
+            }
+
+            verificarPar() {
+                const [primeira, segunda] = this.cartasViradas;
+                this.tentativas++;
+                
+                if (this.cartas[primeira] === this.cartas[segunda]) {
+                    this.paresEncontrados++;
+                    this.cartasViradas = [];
+                    this.jogoAtivo = true;
+                    
+                    if (this.paresEncontrados === 3) {
+                        this.finalizarJogo();
+                    }
+                } else {
+                    setTimeout(() => {
+                        document.querySelector(`[data-indice="${primeira}"]`).classList.remove('virada');
+                        document.querySelector(`[data-indice="${segunda}"]`).classList.remove('virada');
+                        this.cartasViradas = [];
+                        this.jogoAtivo = true;
+                    }, 500);
+                }
+                
+                this.atualizarContador();
+            }
+
+            finalizarJogo() {
+                this.salvarTentativa();
+                document.getElementById('tentativasFinais').textContent = this.tentativas;
+                document.getElementById('mensagemParabens').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('mensagemParabens').style.display = 'none';
+                }, 3000);
+            }
+
+            salvarTentativa() {
+                let historico = JSON.parse(localStorage.getItem('historicoTentativas') || '[]');
+                historico.push({
+                    tentativas: this.tentativas,
+                    data: new Date().toLocaleString()
+                });
+                localStorage.setItem('historicoTentativas', JSON.stringify(historico));
+                this.carregarHistorico();
+            }
+
+            carregarHistorico() {
+                const historico = JSON.parse(localStorage.getItem('historicoTentativas') || '[]');
+                const lista = document.getElementById('listaHistorico');
+                lista.innerHTML = '';
+                
+                historico.slice(-5).forEach((item, indice) => {
+                    const div = document.createElement('div');
+                    div.className = 'item-historico';
+                    div.textContent = `Jogo ${historico.length - 4 + indice}: ${item.tentativas} tentativas`;
+                    lista.appendChild(div);
+                });
+            }
+
+            atualizarContador() {
+                document.getElementById('tentativasAtuais').textContent = this.tentativas;
+            }
+
+            reiniciar() {
+                this.cartasViradas = [];
+                this.inicializarJogo();
+                document.getElementById('mensagemParabens').style.display = 'none';
+            }
+        }
+
+        let jogo = new JogoMemoria();
+
+        function reiniciarJogo() {
+            jogo.reiniciar();
+        }
+    </script>
+</body>
+</html>

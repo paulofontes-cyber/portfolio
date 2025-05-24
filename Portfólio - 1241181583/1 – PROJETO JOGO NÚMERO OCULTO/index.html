@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo do Número Oculto</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js"></script>
+</head>
+<body>
+   
+    <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+    <div class="particle" style="left: 20%; animation-delay: 2s;"></div>
+    <div class="particle" style="left: 30%; animation-delay: 4s;"></div>
+    <div class="particle" style="left: 40%; animation-delay: 6s;"></div>
+    <div class="particle" style="left: 50%; animation-delay: 8s;"></div>
+    <div class="particle" style="left: 60%; animation-delay: 10s;"></div>
+    <div class="particle" style="left: 70%; animation-delay: 12s;"></div>
+    <div class="particle" style="left: 80%; animation-delay: 14s;"></div>
+    <div class="particle" style="left: 90%; animation-delay: 16s;"></div>
+    
+   
+    <div id="mode-screen" class="game-screen">
+        <h1>🎯 Número Secreto</h1>
+        <p class="subtitle">Escolha seu modo de aventura</p>
+        
+        <div class="buttons-container">
+            <button id="random-mode-button" class="button">🎲 Número Aleatório</button>
+            <button id="two-player-mode-button" class="button">👥 Dois Jogadores</button>
+        </div>
+    </div>
+    
+    
+    <div id="setup-screen" class="game-screen hidden">
+        <h1>🔒 Definir Segredo</h1>
+        <p class="subtitle">Jogador 1: Escolha um número entre 1 e 100</p>
+        
+        <div class="input-container">
+            <input type="number" id="hiddenNumber" min="1" max="100" placeholder="Digite o número secreto" required>
+            <button id="setup-button" class="button">✨ Confirmar Segredo</button>
+        </div>
+        <div id="setup-message" class="message" style="display: none;"></div>
+    </div>
+
+   
+    <div id="guessing-screen" class="game-screen hidden">
+        <h1>🎯 Acerte o Alvo!</h1>
+        <p class="subtitle" id="range-text">O número secreto está entre 1 e 100</p>
+        
+        <div id="player-indicator" class="player-indicator hidden">🎮 Jogador 2</div>
+        
+        <div class="input-container">
+            <input type="number" id="guess" min="1" max="100" placeholder="Digite seu palpite" required>
+            <button id="guess-button" class="button">🔍 Verificar Palpite</button>
+        </div>
+        <div id="guess-message" class="message" style="display: none;"></div>
+        
+        <div id="attempts-counter">Tentativas restantes: <span id="attempts-left">5</span></div>
+        
+        <div id="guess-history-container" class="history-container">
+            <div id="guess-history" class="history-list"></div>
+        </div>
+    </div>
+
+   
+    <div id="result-screen" class="game-screen hidden">
+        <h1 id="result-title">🎯 Resultado</h1>
+        <p class="subtitle" id="result-message"></p>
+        
+        <div class="buttons-container">
+            <button id="play-again-button" class="button">🔄 Jogar Novamente</button>
+            <button id="change-mode-button" class="button outline">🎮 Mudar Modo</button>
+        </div>
+        
+        <div id="result-history-container" class="history-container">
+            <div id="result-history" class="history-list"></div>
+        </div>
+    </div>
+</body>
+</html>

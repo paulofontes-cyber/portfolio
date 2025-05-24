@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Gerenciamento de Tarefas (Kanban)</title>
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+  <div class="recipiente-principal">
+    <header class="cabecalho">
+      <h1 class="titulo-principal">Sistema de Gerenciamento de Tarefas</h1>
+      <p class="subtitulo">Organize suas tarefas de forma visual e eficiente</p>
+    </header>
+    
+    <section class="secao-formulario">
+      <div class="cartao-formulario">
+        <input 
+          type="text" 
+          id="entrada-tarefa" 
+          class="campo-entrada" 
+          placeholder="Digite a descrição da nova tarefa..."
+        >
+        <button id="botao-adicionar" class="botao-principal">
+          <span class="icone-adicionar">+</span>
+          Adicionar Tarefa
+        </button>
+      </div>
+    </section>
+    
+    <main class="quadro-kanban">
+      <div class="coluna-kanban" data-coluna="em-aberto">
+        <div class="cabecalho-coluna em-aberto">
+          <span class="icone-coluna">📋</span>
+          <h3>Em Aberto</h3>
+          <span class="contador-tarefas" id="contador-em-aberto">0</span>
+        </div>
+        <div class="container-tarefas" id="em-aberto"></div>
+      </div>
+      
+      <div class="coluna-kanban" data-coluna="bid">
+        <div class="cabecalho-coluna bid">
+          <span class="icone-coluna">💼</span>
+          <h3>Negociação</h3>
+          <span class="contador-tarefas" id="contador-bid">0</span>
+        </div>
+        <div class="container-tarefas" id="bid"></div>
+      </div>
+      
+      <div class="coluna-kanban" data-coluna="em-andamento">
+        <div class="cabecalho-coluna em-andamento">
+          <span class="icone-coluna">⚙️</span>
+          <h3>Em Andamento</h3>
+          <span class="contador-tarefas" id="contador-em-andamento">0</span>
+        </div>
+        <div class="container-tarefas" id="em-andamento"></div>
+      </div>
+      
+      <div class="coluna-kanban" data-coluna="entregue">
+        <div class="cabecalho-coluna entregue">
+          <span class="icone-coluna">✅</span>
+          <h3>Entregue</h3>
+          <span class="contador-tarefas" id="contador-entregue">0</span>
+        </div>
+        <div class="container-tarefas" id="entregue"></div>
+      </div>
+    </main>
+  </div>
+  
+  <script src="script.js"></script>
+</body>
+</html>

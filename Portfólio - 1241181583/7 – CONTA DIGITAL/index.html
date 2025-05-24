@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank SE</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container-principal">
+        <div class="cabecalho">
+            <div class="logo-banco">
+                <div class="icone-logo">◆</div>
+                Bank SE
+            </div>
+            <div class="informacoes-usuario">
+                <span>Olá, Fulano</span>
+                <div class="avatar-usuario">👤</div>
+            </div>
+        </div>
+
+        <div class="conteudo-principal">
+            <div class="cartao-saldo">
+                <div class="rotulo-saldo">Conta</div>
+                <div class="valor-saldo" id="saldo">R$ 0,00</div>
+            </div>
+
+            <div class="cartoes-resumo">
+                <div class="cartao-resumo entradas">
+                    <div class="rotulo-resumo">Entradas</div>
+                    <div class="valor-resumo entradas" id="entradas">R$ 0,00</div>
+                </div>
+                <div class="cartao-resumo saidas">
+                    <div class="rotulo-resumo">Saídas</div>
+                    <div class="valor-resumo saidas" id="saidas">R$ 0,00</div>
+                </div>
+            </div>
+
+            <div class="banner-seguros">
+                <div class="conteudo-seguros">
+                    <div class="texto-seguros">
+                        <div class="titulo-seguros">Bank SE</div>
+                        <div class="subtitulo-seguros">Seguros</div>
+                    </div>
+                    <div class="imagem-seguros">
+                       <img src="img/img_seguros.png" alt="">
+                        Imagem Família
+                    </div>
+                </div>
+            </div>
+
+            <div class="botoes-acao">
+                <button class="botao-acao" onclick="abrirModalPix()">
+                    <div class="icone-botao-acao">
+                        <img src="img/icon_pix_.png" alt="">
+                    </div>
+                    <div class="texto-botao-acao">Área PIX</div>
+                </button>
+                <button class="botao-acao" onclick="mostrarSistemaIndisponivel('Pagar')">
+                    <div class="icone-botao-acao">
+                        <img src="img/icon _enviar_.png" alt="">
+                    </div>
+                    <div class="texto-botao-acao">Pagar</div>
+                </button>
+                <button class="botao-acao" onclick="mostrarSistemaIndisponivel('Investir')">
+                    <div class="icone-botao-acao">
+                        <img src="img/icon _graph_.png" alt="">
+                    </div>
+                    <div class="texto-botao-acao">Investir</div>
+                </button>
+            </div>
+
+            <div class="secao-transacoes">
+                <div class="cabecalho-transacoes">Últimas transações</div>
+                <div id="lista-transacoes">
+                    <div class="sem-transacoes">Não constam transações</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="rodape">
+            © 2024 BankSE - Desenvolvido por: Josimar Santos
+        </div>
+    </div>
+
+    <div class="modal" id="modalPix">
+        <div class="conteudo-modal">
+            <div class="cabecalho-modal">
+                <div class="titulo-modal">Área PIX</div>
+                <button class="botao-fechar" onclick="fecharModalPix()">&times;</button>
+            </div>
+
+            <div class="abas-pix">
+                <button class="aba-pix ativo" onclick="trocarAba('receber')">RECEBER</button>
+                <button class="aba-pix" onclick="trocarAba('transferir')">TRANSFERIR</button>
+            </div>
+
+            <div class="mensagem-sucesso" id="mensagemSucesso"></div>
+
+            <div class="formulario-pix ativo" id="formularioReceber">
+                <form onsubmit="processarRecebimento(event)">
+                    <div class="grupo-formulario">
+                        <label class="rotulo-formulario">CNPJ/CPF</label>
+                        <input type="text" class="entrada-formulario" id="cpfCnpjReceber" placeholder="Digite o CNPJ/CPF">
+                        <div class="mensagem-erro" id="erroReceber">Todos os campos devem ser preenchidos!</div>
+                    </div>
+                    <div class="grupo-formulario">
+                        <label class="rotulo-formulario">Valor</label>
+                        <input type="number" class="entrada-formulario" id="valorReceber" placeholder="Digite o valor" step="0.01" min="0.01">
+                    </div>
+                    <button type="submit" class="botao-formulario">COBRAR</button>
+                </form>
+            </div>
+
+            <div class="formulario-pix" id="formularioTransferir">
+                <form onsubmit="processarTransferencia(event)">
+                    <div class="grupo-formulario">
+                        <label class="rotulo-formulario">Chave PIX</label>
+                        <input type="text" class="entrada-formulario" id="chavePix" placeholder="Digite a chave PIX">
+                        <div class="mensagem-erro" id="erroTransferir">Todos os campos devem ser preenchidos!</div>
+                    </div>
+                    <div class="grupo-formulario">
+                        <label class="rotulo-formulario">Valor</label>
+                        <input type="number" class="entrada-formulario" id="valorTransferir" placeholder="Digite o valor" step="0.01" min="0.01">
+                    </div>
+                    <button type="submit" class="botao-formulario">TRANSFERIR</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="modalSistema">
+        <div class="conteudo-modal">
+            <div class="cabecalho-modal">
+                <div class="titulo-modal" id="tituloSistema"></div>
+                <button class="botao-fechar" onclick="fecharModalSistema()">&times;</button>
+            </div>
+            <div class="mensagem-sistema">
+                Sistema indisponível. Tente novamente mais tarde.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let saldo = 0;
+        let totalEntradas = 0;
+        let totalSaidas = 0;
+        let transacoes = [];
+
+        function inicializar() {
+            atualizarTela();
+        }
+
+        function atualizarTela() {
+            document.getElementById('saldo').textContent = formatarMoeda(saldo);
+            document.getElementById('entradas').textContent = formatarMoeda(totalEntradas);
+            document.getElementById('saidas').textContent = formatarMoeda(totalSaidas);
+            atualizarListaTransacoes();
+        }
+
+        function formatarMoeda(valor) {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            }).format(valor);
+        }
+
+        function gerarIdTransacao() {
+            const agora = new Date();
+            const ano = agora.getFullYear();
+            const mes = String(agora.getMonth() + 1).padStart(2, '0');
+            const dia = String(agora.getDate()).padStart(2, '0');
+            const hora = String(agora.getHours()).padStart(2, '0');
+            const minuto = String(agora.getMinutes()).padStart(2, '0');
+            const segundo = String(agora.getSeconds()).padStart(2, '0');
+            
+            return `${ano}${mes}${dia}${hora}${minuto}${segundo}`;
+        }
+
+        function formatarDataHora() {
+            const agora = new Date();
+            return agora.toLocaleString('pt-BR');
+        }
+
+        function adicionarTransacao(tipo, valor, descricao) {
+            const transacao = {
+                id: gerarIdTransacao(),
+                tipo: tipo,
+                valor: valor,
+                descricao: descricao,
+                dataHora: formatarDataHora(),
+                timestamp: new Date()
+            };
+            
+            transacoes.unshift(transacao);
+            
+            if (tipo === 'entrada') {
+                saldo += valor;
+                totalEntradas += valor;
+            } else {
+                saldo -= valor;
+                totalSaidas += valor;
+            }
+            
+            atualizarTela();
+        }
+
+        function atualizarListaTransacoes() {
+            const lista = document.getElementById('lista-transacoes');
+            
+            if (transacoes.length === 0) {
+                lista.innerHTML = '<div class="sem-transacoes">Não constam transações</div>';
+                return;
+            }
+            
+            lista.innerHTML = transacoes.map(transacao => `
+                <div class="item-transacao">
+                    <div class="icone-transacao ${transacao.tipo}">
+                        ${transacao.tipo === 'entrada' ? '↓' : '↑'}
+                    </div>
+                    <div class="detalhes-transacao">
+                        <div class="titulo-transacao">
+                            ${transacao.tipo === 'entrada' ? 'Entrada' : 'Saída'}
+                        </div>
+                        <div class="info-transacao">
+                            ${transacao.dataHora} • ${transacao.descricao} • ID: ${transacao.id}
+                        </div>
+                    </div>
+                    <div class="valor-transacao ${transacao.tipo}">
+                        ${transacao.tipo === 'entrada' ? '+' : '-'}${formatarMoeda(Math.abs(transacao.valor))}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function abrirModalPix() {
+            document.getElementById('modalPix').classList.add('ativo');
+        }
+
+        function fecharModalPix() {
+            document.getElementById('modalPix').classList.remove('ativo');
+            limparFormularios();
+            esconderMensagens();
+        }
+
+        function trocarAba(aba) {
+            document.querySelectorAll('.aba-pix').forEach(btn => btn.classList.remove('ativo'));
+            event.target.classList.add('ativo');
+            
+            document.querySelectorAll('.formulario-pix').forEach(form => form.classList.remove('ativo'));
+            if (aba === 'receber') {
+                document.getElementById('formularioReceber').classList.add('ativo');
+            } else {
+                document.getElementById('formularioTransferir').classList.add('ativo');
+            }
+            
+            limparFormularios();
+            esconderMensagens();
+        }
+
+        function limparFormularios() {
+            document.querySelectorAll('.entrada-formulario').forEach(input => input.value = '');
+            document.querySelectorAll('.mensagem-erro').forEach(msg => msg.style.display = 'none');
+        }
+
+        function esconderMensagens() {
+            document.getElementById('mensagemSucesso').style.display = 'none';
+        }
+
+        function mostrarSucesso(mensagem) {
+            const msgSucesso = document.getElementById('mensagemSucesso');
+            msgSucesso.textContent = mensagem;
+            msgSucesso.style.display = 'block';
+        }
+
+        function mostrarErro(tipoFormulario) {
+            document.getElementById('erro' + tipoFormulario.charAt(0).toUpperCase() + tipoFormulario.slice(1)).style.display = 'block';
+        }
+
+        function processarRecebimento(event) {
+            event.preventDefault();
+            
+            const cpfCnpj = document.getElementById('cpfCnpjReceber').value.trim();
+            const valor = parseFloat(document.getElementById('valorReceber').value);
+            
+            if (!cpfCnpj || !valor || valor <= 0) {
+                mostrarErro('receber');
+                return;
+            }
+            
+            adicionarTransacao('entrada', valor, 'Transferência recebida');
+            mostrarSucesso('Transação realizada com sucesso');
+            limparFormularios();
+            
+            setTimeout(() => {
+                fecharModalPix();
+            }, 2000);
+        }
+
+        function processarTransferencia(event) {
+            event.preventDefault();
+            
+            const chavePix = document.getElementById('chavePix').value.trim();
+            const valor = parseFloat(document.getElementById('valorTransferir').value);
+            
+            if (!chavePix || !valor || valor <= 0) {
+                mostrarErro('transferir');
+                return;
+            }
+            
+            if (saldo < valor) {
+                const msgErro = document.getElementById('erroTransferir');
+                msgErro.textContent = 'Saldo insuficiente!';
+                msgErro.style.display = 'block';
+                return;
+            }
+            
+            adicionarTransacao('saida', valor, 'Transferência enviada');
+            mostrarSucesso('Transação realizada com sucesso');
+            limparFormularios();
+            
+            setTimeout(() => {
+                fecharModalPix();
+            }, 2000);
+        }
+
+        function mostrarSistemaIndisponivel(sistema) {
+            document.getElementById('tituloSistema').textContent = sistema;
+            document.getElementById('modalSistema').classList.add('ativo');
+        }
+
+        function fecharModalSistema() {
+            document.getElementById('modalSistema').classList.remove('ativo');
+        }
+
+        window.onclick = function(event) {
+            const modalPix = document.getElementById('modalPix');
+            const modalSistema = document.getElementById('modalSistema');
+            
+            if (event.target === modalPix) {
+                fecharModalPix();
+            }
+            if (event.target === modalSistema) {
+                fecharModalSistema();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', inicializar);
+    </script>
+</body>
+</html>
