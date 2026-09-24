@@ -33,6 +33,13 @@ export const projects = [
       },
     ],
     visual: 'reports',
+    capability:
+      'Arquitetar um fluxo assíncrono de relatórios, da solicitação na interface à entrega do arquivo pronto.',
+    developed: [
+      'Arquitetura de API',
+      'Processamento em filas',
+      'Integração entre serviços',
+    ],
   },
   {
     number: '02',
@@ -42,7 +49,7 @@ export const projects = [
       'Uma experiência web para explorar vagas e acompanhar candidaturas na JotaNunes Construtora.',
     detail:
       'Criei o design e liderei o desenvolvimento do front-end na residência, organizando os fluxos de vagas e candidaturas em uma interface responsiva.',
-    tags: ['Design de interface', 'Liderança', 'React', 'TypeScript', 'Vite'],
+    tags: ['Figma', 'Design de interface', 'Liderança', 'React', 'TypeScript', 'Vite'],
     links: [
       {
         label: 'Ver protótipo no Figma',
@@ -50,6 +57,13 @@ export const projects = [
       },
     ],
     visual: 'jotanunes',
+    capability:
+      'Transformar jornadas de vagas e candidaturas em um produto responsivo, do protótipo à implementação.',
+    developed: [
+      'Design de interface no Figma',
+      'Liderança front-end',
+      'Fluxos de usuário',
+    ],
   },
   {
     number: '03',
@@ -71,6 +85,13 @@ export const projects = [
       },
     ],
     visual: 'svo',
+    capability:
+      'Organizar informações de um serviço público em uma experiência web mais clara e acessível em diferentes telas.',
+    developed: [
+      'Interface responsiva',
+      'Hierarquia da informação',
+      'Desenvolvimento web',
+    ],
   },
   {
     number: '04',
@@ -88,6 +109,13 @@ export const projects = [
       },
     ],
     visual: 'research',
+    capability:
+      'Explorar painéis e jornadas para diferentes perfis em um contexto de pesquisa aplicada.',
+    developed: [
+      'Prototipação de dashboards',
+      'Visualização de informações',
+      'Pesquisa de interface',
+    ],
   },
 ]
 
@@ -126,6 +154,7 @@ export const experience = [
 export const skills = [
   {
     title: 'Back-end',
+    description: 'Lógica, APIs e serviços que sustentam o produto.',
     items: [
       'Node.js',
       'TypeScript',
@@ -138,11 +167,28 @@ export const skills = [
   },
   {
     title: 'Dados & infraestrutura',
+    description: 'Persistência, filas e ambientes de execução.',
     items: ['PostgreSQL', 'SQL', 'Redis', 'BullMQ', 'MinIO', 'Docker', 'Git'],
   },
-  { title: 'Front-end', items: ['React', 'Vite', 'HTML', 'CSS', 'Bootstrap'] },
   {
-    title: 'IA & cloud',
+    title: 'Front-end',
+    description: 'Interfaces responsivas e experiências web.',
+    items: ['React', 'Vite', 'HTML', 'CSS', 'Bootstrap'],
+  },
+  {
+    title: 'Design & produto',
+    description: 'Da descoberta da jornada ao protótipo navegável.',
+    items: [
+      'Figma',
+      'UX/UI',
+      'Prototipação',
+      'Design responsivo',
+      'Fluxos de usuário',
+    ],
+  },
+  {
+    title: 'IA & pesquisa',
+    description: 'Investigação e ferramentas para experimentar novas soluções.',
     items: [
       'IA aplicada ao desenvolvimento',
       'OpenAI Codex',

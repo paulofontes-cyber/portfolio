@@ -16,7 +16,7 @@ const navigation = [
   { label: 'Sobre', href: '#sobre' },
   { label: 'Projetos', href: '#projetos' },
   { label: 'Experiência', href: '#experiencia' },
-  { label: 'Stack', href: '#stack' },
+  { label: 'Ferramentas', href: '#stack' },
 ]
 
 function SectionHeading({ eyebrow, title, description }) {
@@ -141,7 +141,7 @@ function ProjectVisual({ type }) {
 
 function ProjectCard({ project }) {
   return (
-    <article className="project-card reveal">
+    <article className="project-card reveal" id={`projeto-${project.number}`}>
       <ProjectVisual type={project.visual} />
       <div className="project-body">
         <div className="project-meta">
@@ -173,6 +173,8 @@ function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('inicio')
   const [hasScrolled, setHasScrolled] = useState(false)
+  const [selectedProject, setSelectedProject] = useState(0)
+  const featuredProject = projects[selectedProject]
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -627,8 +629,73 @@ function App() {
                   Ferramentas a serviço <em>das ideias.</em>
                 </>
               }
-              description="Tecnologias que uso para tirar projetos do conceito e levá-los até uma solução funcional."
+              description="Escolha um projeto para descobrir as habilidades que desenvolvi e as ferramentas usadas em cada solução."
             />
+            <div className="skill-explorer reveal">
+              <div className="skill-explorer-topline">
+                <span>NA PRÁTICA / CONEXÕES REAIS</span>
+                <span>01 — 0{projects.length}</span>
+              </div>
+              <div
+                className="skill-project-picker"
+                aria-label="Explorar competências por projeto"
+              >
+                {projects.map((project, index) => (
+                  <button
+                    className={
+                      selectedProject === index ? 'is-selected' : undefined
+                    }
+                    type="button"
+                    key={project.number}
+                    aria-pressed={selectedProject === index}
+                    onClick={() => setSelectedProject(index)}
+                  >
+                    <span>{project.number}</span>
+                    {project.title}
+                    <ArrowUpRight size={15} aria-hidden="true" />
+                  </button>
+                ))}
+              </div>
+              <div
+                className="skill-project-detail"
+                key={featuredProject.number}
+              >
+                <div className="skill-project-story">
+                  <span className="skill-detail-label">
+                    PROJETO {featuredProject.number} /{' '}
+                    {featuredProject.category}
+                  </span>
+                  <h3>{featuredProject.title}</h3>
+                  <p>{featuredProject.capability}</p>
+                  <a href={`#projeto-${featuredProject.number}`}>
+                    Explorar este projeto{' '}
+                    <ArrowUpRight size={17} aria-hidden="true" />
+                  </a>
+                </div>
+                <div className="skill-project-proof">
+                  <div>
+                    <h4>HABILIDADES DESENVOLVIDAS</h4>
+                    <ul className="developed-list">
+                      {featuredProject.developed.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <h4>STACK UTILIZADA</h4>
+                    <div className="project-stack-list">
+                      {featuredProject.tags.map((tag) => (
+                        <span key={tag}>{tag}</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="skills-index-heading reveal">
+              <span>REPERTÓRIO COMPLETO</span>
+              <p>Competências que conecto conforme o desafio.</p>
+            </div>
             <div className="skills-grid">
               {skills.map((group, index) => (
                 <article className="skill-card reveal" key={group.title}>
@@ -637,6 +704,7 @@ function App() {
                     <span className="skill-card-accent" aria-hidden="true" />
                   </div>
                   <h3>{group.title}</h3>
+                  <p className="skill-card-description">{group.description}</p>
                   <div className="skill-items">
                     {group.items.map((item) => (
                       <span key={item}>{item}</span>
@@ -699,8 +767,7 @@ function App() {
             PAULO FONTES
           </a>
           <span>
-            {new Date().getFullYear()} · Feito com intenção, de Aracaju para o
-            universo.
+            {new Date().getFullYear()} · PAULO FONTES · DESENVOLVIMENTO DE SOFTWARE · ARACAJU, BR
           </span>
           <div>
             <a href={links.github} target="_blank" rel="noreferrer">
