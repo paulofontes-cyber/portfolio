@@ -94,7 +94,7 @@ export const projects = [
 export const experience = [
   {
     period: '4 residências',
-    role: 'Residência em Software',
+    role: 'Residência Tecnológica',
     company: 'Porto Digital',
     highlight: 'LIDEREI 2 DE 4 RESIDÊNCIAS',
     description:
