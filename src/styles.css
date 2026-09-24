@@ -152,15 +152,18 @@ em {
   box-shadow: 0 0 16px rgba(156, 229, 223, 0.2);
 }
 .brand-mark svg {
-  width: 24px;
-  height: 24px;
+  width: 29px;
+  height: 29px;
   stroke: #f2f7f7;
-  stroke-width: 2.5;
+  stroke-width: 2.8;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-.brand-mark .brand-cursor {
+.brand-mark .brand-initial {
   stroke: var(--cyan);
+}
+.brand-mark .brand-cursor {
+  stroke: #f2f7f7;
 }
 .brand-subtitle {
   display: block;

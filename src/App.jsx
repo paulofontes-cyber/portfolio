@@ -343,9 +343,10 @@ function App() {
           aria-label="Paulo Fontes, voltar ao início"
         >
           <span className="brand-mark" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" focusable="false">
-              <path d="m4 5 6 6-6 6" />
-              <path d="M12.5 17H20" className="brand-cursor" />
+            <svg viewBox="0 0 34 34" fill="none" focusable="false">
+              <path d="m4 10 6 7-6 7" />
+              <path d="M14 24V10h5a4 4 0 0 1 0 8h-5" className="brand-initial" />
+              <path d="M24 24h6" className="brand-cursor" />
             </svg>
           </span>
           <span>
