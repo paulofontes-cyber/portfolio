@@ -101,7 +101,7 @@ export const experience = [
       'Na parceria com a Fundação de Saúde Parreiras Horta, desenvolvi uma nova interface para o site do SVO. No projeto da JotaNunes Construtora, criei o design e liderei o desenvolvimento do front-end.',
   },
   {
-    period: '2025 — atual',
+    period: '2025',
     role: 'ADS - Trust & Safety',
     company: 'MKIT (Hong Kong) Holdings Limited',
     description:
@@ -112,14 +112,14 @@ export const experience = [
     role: 'Community Manager Assistant',
     company: 'Amino Apps',
     description:
-      'Projetos de comunidade, tradução EN–PT, moderação, design e co-liderança de equipes em diferentes regiões.',
+      'Projetos da comunidade, tradução EN–PT, moderação, design e liderança de equipes.',
   },
   {
     period: '2024',
     role: 'Tradutor freelancer',
     company: 'RWS Group',
     description:
-      'Revisão e tradução para português com atenção à qualidade e à precisão terminológica.',
+      'Revisão e tradução para português com atenção à qualidade e à precisão (localização).',
   },
 ]
 
