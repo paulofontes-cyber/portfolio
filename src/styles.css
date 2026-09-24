@@ -145,7 +145,9 @@ em {
   display: grid;
   place-items: center;
   box-shadow: inset 0 0 0 2px rgba(8, 11, 19, 0.45);
-  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+  transition:
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
 }
 .brand:hover .brand-mark {
   border-color: var(--cyan);
@@ -324,7 +326,7 @@ em {
 }
 .availability-arrow {
   margin-left: 8px;
-  font-size: 15px;
+  flex: none;
 }
 .hero-kicker {
   font-family: 'Space Grotesk', sans-serif;
@@ -332,10 +334,6 @@ em {
   letter-spacing: 0.24em;
   font-size: 12px;
   margin: 49px 0 16px;
-}
-.hero-kicker span {
-  color: var(--cyan);
-  margin-left: 8px;
 }
 .hero h1 {
   font-size: clamp(58px, 5.7vw, 86px);
@@ -539,20 +537,6 @@ em {
   transform: rotate(-20deg);
   filter: blur(10px);
 }
-.art-spark {
-  position: absolute;
-  color: #b8ede6;
-}
-.art-spark-one {
-  font-size: 28px;
-  right: 29px;
-  top: 170px;
-}
-.art-spark-two {
-  font-size: 19px;
-  left: 8px;
-  bottom: 174px;
-}
 .art-coordinates {
   position: absolute;
   top: 100px;
@@ -695,6 +679,9 @@ em {
   z-index: 2;
   bottom: 26px;
   left: 30px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.19em;
@@ -854,6 +841,9 @@ em {
 }
 .showcase-caption span:last-child {
   color: var(--cyan);
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
 }
 .reports-visual {
   background: radial-gradient(circle at 42% 30%, #335865, #142b38 50%, #0d1b29);
@@ -1255,10 +1245,6 @@ em {
   border: 1px solid #253941;
   border-radius: 50%;
 }
-.experience-decoration span {
-  font-size: 38px;
-  color: #6daaa9;
-}
 .experience-decoration i {
   position: absolute;
   width: 6px;
@@ -1389,9 +1375,10 @@ em {
   font-size: 11px;
   font-family: 'Space Grotesk', sans-serif;
 }
-.skill-card-header span:last-child {
-  font-size: 22px;
-  color: var(--cyan);
+.skill-card-accent {
+  width: 18px;
+  height: 1px;
+  background: var(--cyan);
 }
 .skill-card h3 {
   font-size: 21px;
@@ -1433,7 +1420,6 @@ em {
   color: var(--cyan);
   display: grid;
   place-items: center;
-  font-size: 21px;
 }
 .education-strip strong {
   font-size: 11px;
@@ -1552,10 +1538,6 @@ em {
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.13em;
-}
-.footer-brand span {
-  color: var(--cyan);
-  margin-left: 7px;
 }
 .footer-inner > span {
   color: #788994;

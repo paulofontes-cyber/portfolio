@@ -94,8 +94,8 @@ export const projects = [
 export const experience = [
   {
     period: '4 residências',
-    role: 'Líder de squad · Front-end',
-    company: 'Software Residency',
+    role: 'Residência em Software',
+    company: 'Porto Digital',
     highlight: 'LIDEREI 2 DE 4 RESIDÊNCIAS',
     description:
       'Na parceria com a Fundação de Saúde Parreiras Horta, desenvolvi uma nova interface para o site do SVO. No projeto da JotaNunes Construtora, criei o design e liderei o desenvolvimento do front-end.',

@@ -3,6 +3,7 @@ import {
   ArrowDown,
   ArrowRight,
   ArrowUpRight,
+  GraduationCap,
   Github,
   Linkedin,
   Mail,
@@ -51,7 +52,9 @@ function ProjectVisual({ type }) {
               ? 'JOTANUNES / CARREIRAS'
               : 'FSPH / PORTAL SVO'}
           </span>
-          <span>INTERFACE ↗</span>
+          <span>
+            INTERFACE <ArrowUpRight size={13} aria-hidden="true" />
+          </span>
         </div>
       </div>
     )
@@ -345,7 +348,10 @@ function App() {
           <span className="brand-mark" aria-hidden="true">
             <svg viewBox="0 0 34 34" fill="none" focusable="false">
               <path d="m4 10 6 7-6 7" />
-              <path d="M14 24V10h5a4 4 0 0 1 0 8h-5" className="brand-initial" />
+              <path
+                d="M14 24V10h5a4 4 0 0 1 0 8h-5"
+                className="brand-initial"
+              />
               <path d="M24 24h6" className="brand-cursor" />
             </svg>
           </span>
@@ -406,11 +412,14 @@ function App() {
             <div className="hero-copy">
               <div className="availability">
                 <span className="pulse-dot" /> DESENVOLVIMENTO · PESQUISA ·
-                INOVAÇÃO <span className="availability-arrow">↗</span>
+                INOVAÇÃO{' '}
+                <ArrowUpRight
+                  className="availability-arrow"
+                  size={15}
+                  aria-hidden="true"
+                />
               </div>
-              <p className="hero-kicker">
-                OLÁ, EU SOU PAULO FONTES <span>✦</span>
-              </p>
+              <p className="hero-kicker">OLÁ, EU SOU PAULO FONTES</p>
               <h1>
                 Construindo <em>soluções</em> que vão mais longe.
               </h1>
@@ -465,8 +474,6 @@ function App() {
                 <div className="planet-shine" />
                 <div className="planet-texture" />
               </div>
-              <div className="art-spark art-spark-one">✦</div>
-              <div className="art-spark art-spark-two">✧</div>
               <div className="art-coordinates">
                 10°55′S &nbsp; 37°04′W <span>— ARACAJU, BR</span>
               </div>
@@ -494,7 +501,9 @@ function App() {
               />
               <div className="photo-corner photo-corner-top" />
               <div className="photo-corner photo-corner-bottom" />
-              <span className="photo-label">BEYOND THE CODE ↗</span>
+              <span className="photo-label">
+                BEYOND THE CODE <ArrowUpRight size={13} aria-hidden="true" />
+              </span>
             </div>
             <div className="about-content">
               <SectionHeading
@@ -586,7 +595,6 @@ function App() {
                 minha forma de resolver problemas.
               </p>
               <div className="experience-decoration" aria-hidden="true">
-                <span>✦</span>
                 <i />
                 <i />
               </div>
@@ -601,9 +609,7 @@ function App() {
                   <h3>{item.role}</h3>
                   <p className="timeline-company">{item.company}</p>
                   {item.highlight && (
-                    <span className="timeline-highlight">
-                      ✦ {item.highlight}
-                    </span>
+                    <span className="timeline-highlight">{item.highlight}</span>
                   )}
                   <p className="timeline-description">{item.description}</p>
                 </article>
@@ -628,7 +634,7 @@ function App() {
                 <article className="skill-card reveal" key={group.title}>
                   <div className="skill-card-header">
                     <span>0{index + 1}</span>
-                    <span>✳</span>
+                    <span className="skill-card-accent" aria-hidden="true" />
                   </div>
                   <h3>{group.title}</h3>
                   <div className="skill-items">
@@ -641,7 +647,9 @@ function App() {
             </div>
             <div className="education-strip reveal">
               <div>
-                <span className="education-icon">✦</span>
+                <span className="education-icon" aria-hidden="true">
+                  <GraduationCap size={22} strokeWidth={1.7} />
+                </span>
                 <div>
                   <strong>FORMAÇÃO & PESQUISA</strong>
                   <p>
@@ -688,10 +696,10 @@ function App() {
       <footer className="footer">
         <div className="section-container footer-inner">
           <a className="footer-brand" href="#inicio">
-            PAULO FONTES<span>✦</span>
+            PAULO FONTES
           </a>
           <span>
-            © {new Date().getFullYear()} · Feito com intenção, de Aracaju para o
+            {new Date().getFullYear()} · Feito com intenção, de Aracaju para o
             universo.
           </span>
           <div>
