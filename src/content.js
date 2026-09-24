@@ -110,7 +110,7 @@ export const experience = [
   {
     period: '2023 — 2025',
     role: 'Community Manager Assistant',
-    company: 'Amino Apps',
+    company: 'MediaLab.AI',
     description:
       'Projetos da comunidade, tradução EN–PT, moderação, design e liderança de equipes.',
   },
