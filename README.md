@@ -20,7 +20,11 @@ npm run preview
 
 Para formatar os arquivos da aplicação, use `npm run format`.
 
-O diretório `dist/` é o resultado da compilação. O `base: './'` em `vite.config.js` permite publicar em subdiretórios, como GitHub Pages.
+O diretório `dist/` é o resultado da compilação. `vite.config.js` usa `base: '/portfolio/'` para que os arquivos sejam carregados no endereço do GitHub Pages deste repositório.
+
+## Publicação
+
+Em **Settings → Pages**, selecione **GitHub Actions** como fonte. O workflow `.github/workflows/build.yml` compila o projeto a cada push em `main` e publica somente `dist/`. Pull requests executam o build sem publicar. O `index.html` da raiz é a entrada de desenvolvimento do Vite e não deve ser servido diretamente pelo Pages.
 
 ## Organização
 
