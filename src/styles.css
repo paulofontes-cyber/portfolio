@@ -54,6 +54,18 @@ h3,
 p {
   margin-top: 0;
 }
+.hero-description,
+.section-heading p,
+.about-lead,
+.about-secondary,
+.project-summary,
+.project-detail,
+.experience-aside > p,
+.timeline-description,
+.skill-project-story p {
+  text-align: justify;
+  hyphens: auto;
+}
 h1,
 h2,
 h3 {
@@ -1834,6 +1846,25 @@ em {
   .site-header {
     height: 72px;
     padding-inline: 23px;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .site-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: rgba(12, 23, 35, 0.12);
+    -webkit-backdrop-filter: blur(18px) saturate(150%);
+    backdrop-filter: blur(18px) saturate(150%);
+    pointer-events: none;
+  }
+  .brand {
+    position: relative;
+    z-index: 1;
+  }
+  .scroll-progress {
+    z-index: 1;
   }
   .brand {
     font-size: 11px;
@@ -1846,11 +1877,12 @@ em {
     display: grid;
     place-items: center;
     position: relative;
-    z-index: 52;
+    z-index: 3;
   }
   .nav {
     display: none;
     position: fixed;
+    z-index: 2;
     inset: 0;
     background: rgba(9, 17, 28, 0.88);
     -webkit-backdrop-filter: blur(24px) saturate(140%);
