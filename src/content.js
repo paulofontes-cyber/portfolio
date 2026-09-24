@@ -102,10 +102,10 @@ export const experience = [
   },
   {
     period: '2025 — atual',
-    role: 'Ads Moderation / Trust & Safety',
+    role: 'ADS - Trust & Safety',
     company: 'MKIT (Hong Kong) Holdings Limited',
     description:
-      'Curadoria de anúncios em português e inglês, aplicação de políticas e colaboração em melhorias de processos de revisão.',
+      'Curadoria de anúncios em português e inglês, aplicação de políticas, treinamento de bot automático e colaboração em melhorias dos processos de revisão.',
   },
   {
     period: '2023 — 2025',

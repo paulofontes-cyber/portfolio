@@ -19,6 +19,7 @@
 }
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 104px;
 }
 body {
   margin: 0;
@@ -96,7 +97,7 @@ em {
 
 .site-header {
   height: 88px;
-  position: absolute;
+  position: fixed;
   z-index: 50;
   left: 0;
   right: 0;
@@ -106,6 +107,24 @@ em {
   justify-content: space-between;
   padding: 0 max(56px, calc((100vw - 1200px) / 2));
   border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgba(8, 11, 19, 0.48);
+  transition:
+    background 0.25s ease,
+    box-shadow 0.25s ease;
+}
+.site-header.is-scrolled {
+  background: #090e17;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.22);
+}
+.scroll-progress {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: var(--scroll-progress, 0%);
+  height: 2px;
+  background: linear-gradient(90deg, #4e9ba5, var(--cyan));
+  box-shadow: 0 0 14px rgba(156, 229, 223, 0.6);
+  pointer-events: none;
 }
 .brand {
   display: flex;
@@ -152,6 +171,21 @@ em {
 .nav > a:hover {
   color: var(--cyan);
 }
+.nav > a.is-active {
+  color: var(--cyan);
+}
+.nav > a.is-active:not(.nav-contact) {
+  position: relative;
+}
+.nav > a.is-active:not(.nav-contact):after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -12px;
+  height: 1px;
+  background: var(--cyan);
+}
 .nav .nav-contact {
   display: flex;
   align-items: center;
@@ -160,6 +194,9 @@ em {
   border: 1px solid rgba(156, 229, 223, 0.35);
   color: var(--cyan);
   margin-left: 10px;
+}
+.nav .nav-contact.is-active {
+  background: rgba(156, 229, 223, 0.11);
 }
 .menu-toggle {
   display: none;
@@ -206,6 +243,12 @@ em {
     radial-gradient(1px 1px at 94% 84%, #d5f9f3 97%, transparent);
   background-size: 470px 410px;
 }
+.hero-stars {
+  background-position: 0 var(--star-shift, 0px);
+}
+.contact-stars {
+  background-position: 0 var(--contact-shift, 0px);
+}
 .hero-glow {
   position: absolute;
   width: 700px;
@@ -219,6 +262,7 @@ em {
     transparent 66%
   );
   filter: blur(18px);
+  transform: translate3d(0, var(--glow-shift, 0px), 0);
 }
 .hero-container {
   position: relative;
@@ -234,6 +278,7 @@ em {
   position: relative;
   z-index: 2;
   padding-top: 70px;
+  transform: translate3d(0, var(--hero-shift, 0px), 0);
 }
 .availability {
   display: inline-flex;
@@ -366,18 +411,19 @@ em {
   width: 620px;
   height: 450px;
   animation: orbitFloat 15s ease-in-out infinite;
+  rotate: var(--orbit-spin, 0deg);
 }
 .orbit-mid {
   width: 530px;
   height: 360px;
   border-color: rgba(170, 221, 217, 0.12);
-  transform: rotate(23deg);
+  transform: rotate(calc(23deg + var(--orbit-spin, 0deg)));
 }
 .orbit-inner {
   width: 430px;
   height: 290px;
   border-color: rgba(170, 221, 217, 0.17);
-  transform: rotate(-17deg);
+  transform: rotate(calc(-17deg - var(--orbit-spin, 0deg)));
 }
 .orbit-satellite {
   position: absolute;
@@ -599,16 +645,16 @@ em {
   height: 100%;
   object-fit: cover;
   object-position: center 36%;
-  filter: grayscale(60%) saturate(0.65) contrast(1.07);
-  opacity: 0.84;
+  filter: brightness(1.12) contrast(1.04) saturate(0.88);
+  transform: translate3d(0, var(--about-shift, 0px), 0) scale(1.06);
 }
 .about-photo-wrap:after {
   content: '';
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(0deg, rgba(5, 16, 23, 0.68), transparent 35%),
-    linear-gradient(95deg, rgba(62, 119, 124, 0.18), transparent);
+    linear-gradient(0deg, rgba(5, 16, 23, 0.58), transparent 32%),
+    linear-gradient(95deg, rgba(62, 119, 124, 0.08), transparent);
 }
 .photo-corner {
   position: absolute;
@@ -740,6 +786,10 @@ em {
   transform: translateY(-5px);
   box-shadow: 0 22px 50px rgba(0, 0, 0, 0.2);
 }
+.project-card.is-centered {
+  border-color: rgba(156, 229, 223, 0.58);
+  box-shadow: 0 16px 48px rgba(35, 114, 124, 0.13);
+}
 .project-visual {
   height: 265px;
   position: relative;
@@ -754,13 +804,14 @@ em {
   object-fit: cover;
   object-position: center top;
   display: block;
+  transform: translate3d(0, var(--visual-shift, 0px), 0) scale(1.09);
   filter: saturate(0.8) brightness(0.76);
   transition:
     transform 0.4s ease,
     filter 0.4s ease;
 }
 .project-card:hover .showcase-visual img {
-  transform: scale(1.04);
+  transform: translate3d(0, var(--visual-shift, 0px), 0) scale(1.13);
   filter: saturate(1) brightness(0.92);
 }
 .svo-visual img {
@@ -827,6 +878,7 @@ em {
   left: 50%;
   top: 48%;
   transform: translate(-50%, -50%) rotate(-5deg);
+  translate: 0 var(--visual-shift, 0px);
   box-shadow: 0 26px 60px rgba(0, 0, 0, 0.34);
 }
 .window-top {
@@ -985,6 +1037,7 @@ em {
   background: #13232e;
   border: 1px solid #73999d;
   box-shadow: 0 24px 40px #07121999;
+  translate: 0 var(--visual-shift, 0px);
 }
 .back-card {
   width: 235px;
@@ -1177,6 +1230,7 @@ em {
   border-radius: 50%;
   display: grid;
   place-items: center;
+  transform: rotate(var(--experience-spin, 0deg));
 }
 .experience-decoration:before {
   content: '';
@@ -1209,6 +1263,25 @@ em {
 }
 .timeline {
   border-top: 1px solid #2b3943;
+  position: relative;
+}
+.timeline:before,
+.timeline:after {
+  content: '';
+  position: absolute;
+  left: -19px;
+  top: 0;
+  width: 1px;
+  pointer-events: none;
+}
+.timeline:before {
+  height: 100%;
+  background: #273d48;
+}
+.timeline:after {
+  height: var(--timeline-progress, 0%);
+  background: var(--cyan);
+  box-shadow: 0 0 12px rgba(156, 229, 223, 0.65);
 }
 .timeline-item {
   position: relative;
@@ -1225,6 +1298,7 @@ em {
   background: var(--cyan);
   border-radius: 50%;
   box-shadow: 0 0 12px var(--cyan);
+  z-index: 1;
 }
 .timeline-top {
   display: flex;
@@ -1536,6 +1610,9 @@ em {
   }
 }
 @media (max-width: 760px) {
+  html {
+    scroll-padding-top: 88px;
+  }
   .site-header {
     height: 72px;
     padding-inline: 23px;
@@ -1792,6 +1869,13 @@ em {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+  .site-header,
+  .showcase-visual img {
+    transition: none;
+  }
+  .scroll-progress {
+    display: none;
   }
   .reveal {
     opacity: 1;

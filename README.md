@@ -39,4 +39,4 @@ Para atualizar projetos ou experiência, edite `src/content.js`. O contato abre 
 
 Os projetos selecionados apontam para os repositórios públicos da [Reports API](https://github.com/UNIT-Residencia-2-Squad-5/ReportsAPI), da [interface de relatórios](https://github.com/UNIT-Residencia-2-Squad-5/ReportsFrontend), do [SVO](https://github.com/paulofontes-cyber/Website-SVO) e da [interface de pesquisa](https://github.com/paulofontes-cyber/IC_INTERFACE_V1). O repositório da JotaNunes está na organização `ResidenciaJotanunes` e não é acessível publicamente; por isso, o portfólio aponta para o [protótipo do projeto no Figma](https://www.figma.com/proto/uxwuNwpQgbfX5eOc4Ju85K/JOTANUNES?node-id=117-1192&starting-point-node-id=117%3A1192).
 
-O site respeita `prefers-reduced-motion`, oferece navegação por teclado e usa elementos decorativos em CSS, sem biblioteca de animação pesada.
+O site traz progresso de leitura, navegação ativa, paralaxe sutil e uma linha de experiência que acompanha a rolagem. Esses efeitos usam `requestAnimationFrame` e respeitam `prefers-reduced-motion`. A navegação por teclado continua disponível.

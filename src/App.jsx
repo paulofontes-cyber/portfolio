@@ -168,6 +168,8 @@ function ProjectCard({ project }) {
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [activeSection, setActiveSection] = useState('inicio')
+  const [hasScrolled, setHasScrolled] = useState(false)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -193,12 +195,148 @@ function App() {
     return () => document.body.classList.remove('menu-open')
   }, [menuOpen])
 
+  useEffect(() => {
+    const sectionIds = [
+      'inicio',
+      'sobre',
+      'projetos',
+      'experiencia',
+      'stack',
+      'contato',
+    ]
+    const sections = sectionIds.map((id) => document.getElementById(id))
+    const hero = document.querySelector('.hero')
+    const about = document.querySelector('.about')
+    const timeline = document.querySelector('.timeline')
+    const experienceSection = document.querySelector('.experience')
+    const contact = document.querySelector('.contact')
+    const cards = [...document.querySelectorAll('.project-card')]
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
+    let frame = 0
+
+    const clamp = (value) => Math.max(0, Math.min(1, value))
+    const updateScroll = () => {
+      frame = 0
+      const viewportHeight = window.innerHeight
+      const scrollMax = Math.max(
+        1,
+        document.documentElement.scrollHeight - viewportHeight,
+      )
+      document.documentElement.style.setProperty(
+        '--scroll-progress',
+        `${(window.scrollY / scrollMax) * 100}%`,
+      )
+      setHasScrolled((current) => {
+        const next = window.scrollY > 24
+        return current === next ? current : next
+      })
+
+      let currentSection = 'inicio'
+      sections.forEach((section) => {
+        if (
+          section &&
+          section.getBoundingClientRect().top <= viewportHeight * 0.38
+        ) {
+          currentSection = section.id
+        }
+      })
+      setActiveSection((current) =>
+        current === currentSection ? current : currentSection,
+      )
+
+      if (reducedMotion.matches) {
+        hero.style.removeProperty('--hero-shift')
+        hero.style.removeProperty('--star-shift')
+        hero.style.removeProperty('--orbit-spin')
+        hero.style.removeProperty('--glow-shift')
+        about.style.removeProperty('--about-shift')
+        experienceSection.style.removeProperty('--experience-spin')
+        timeline.style.removeProperty('--timeline-progress')
+        contact.style.removeProperty('--contact-shift')
+        cards.forEach((card) => {
+          card.style.removeProperty('--visual-shift')
+          card.classList.remove('is-centered')
+        })
+        return
+      }
+
+      const heroProgress = clamp(
+        window.scrollY / Math.max(1, hero.offsetHeight),
+      )
+      hero.style.setProperty('--hero-shift', `${-heroProgress * 48}px`)
+      hero.style.setProperty('--star-shift', `${heroProgress * 90}px`)
+      hero.style.setProperty('--orbit-spin', `${heroProgress * 24}deg`)
+      hero.style.setProperty('--glow-shift', `${heroProgress * 85}px`)
+
+      const aboutRect = about.getBoundingClientRect()
+      const aboutProgress = clamp(
+        (viewportHeight - aboutRect.top) / (viewportHeight + aboutRect.height),
+      )
+      about.style.setProperty(
+        '--about-shift',
+        `${(0.5 - aboutProgress) * 36}px`,
+      )
+
+      const timelineRect = timeline.getBoundingClientRect()
+      const timelineProgress = clamp(
+        (viewportHeight * 0.52 - timelineRect.top) / timelineRect.height,
+      )
+      timeline.style.setProperty(
+        '--timeline-progress',
+        `${timelineProgress * 100}%`,
+      )
+      experienceSection.style.setProperty(
+        '--experience-spin',
+        `${timelineProgress * 45}deg`,
+      )
+
+      const contactRect = contact.getBoundingClientRect()
+      const contactProgress = clamp(
+        (viewportHeight - contactRect.top) /
+          (viewportHeight + contactRect.height),
+      )
+      contact.style.setProperty('--contact-shift', `${contactProgress * 65}px`)
+
+      cards.forEach((card) => {
+        const rect = card.getBoundingClientRect()
+        const cardProgress = clamp(
+          (viewportHeight - rect.top) / (viewportHeight + rect.height),
+        )
+        card.style.setProperty(
+          '--visual-shift',
+          `${(0.5 - cardProgress) * 18}px`,
+        )
+        card.classList.toggle(
+          'is-centered',
+          rect.top < viewportHeight * 0.64 &&
+            rect.bottom > viewportHeight * 0.36,
+        )
+      })
+    }
+
+    const scheduleUpdate = () => {
+      if (!frame) frame = window.requestAnimationFrame(updateScroll)
+    }
+    updateScroll()
+    window.addEventListener('scroll', scheduleUpdate, { passive: true })
+    window.addEventListener('resize', scheduleUpdate)
+    reducedMotion.addEventListener('change', scheduleUpdate)
+    return () => {
+      window.removeEventListener('scroll', scheduleUpdate)
+      window.removeEventListener('resize', scheduleUpdate)
+      reducedMotion.removeEventListener('change', scheduleUpdate)
+      if (frame) window.cancelAnimationFrame(frame)
+    }
+  }, [])
+
   return (
     <>
       <a className="skip-link" href="#conteudo">
         Ir para o conteúdo
       </a>
-      <header className="site-header">
+      <header
+        className={hasScrolled ? 'site-header is-scrolled' : 'site-header'}
+      >
         <a
           className="brand"
           href="#inicio"
@@ -220,14 +358,25 @@ function App() {
             <a
               key={item.href}
               href={item.href}
+              className={
+                activeSection === item.href.slice(1) ? 'is-active' : undefined
+              }
+              aria-current={
+                activeSection === item.href.slice(1) ? 'location' : undefined
+              }
               onClick={() => setMenuOpen(false)}
             >
               {item.label}
             </a>
           ))}
           <a
-            className="nav-contact"
+            className={
+              activeSection === 'contato'
+                ? 'nav-contact is-active'
+                : 'nav-contact'
+            }
             href="#contato"
+            aria-current={activeSection === 'contato' ? 'location' : undefined}
             onClick={() => setMenuOpen(false)}
           >
             Vamos conversar <ArrowUpRight size={15} />
@@ -242,6 +391,7 @@ function App() {
         >
           {menuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
+        <span className="scroll-progress" aria-hidden="true" />
       </header>
 
       <main id="conteudo">
@@ -332,7 +482,7 @@ function App() {
           <div className="section-container about-grid">
             <div className="about-photo-wrap reveal">
               <img
-                src="./paulo-fontes.webp"
+                src="./paulo-fontes.png"
                 alt="Retrato de Paulo Fontes"
                 className="about-photo"
                 loading="lazy"
