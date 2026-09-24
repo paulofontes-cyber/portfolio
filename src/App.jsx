@@ -177,6 +177,29 @@ function App() {
   const featuredProject = projects[selectedProject]
 
   useEffect(() => {
+    const preventAction = (event) => event.preventDefault()
+    const blockInspectorShortcut = (event) => {
+      const key = event.key.toLowerCase()
+      const inspectorShortcut =
+        (event.ctrlKey && event.shiftKey && ['i', 'j', 'c'].includes(key)) ||
+        (event.metaKey && event.altKey && ['i', 'j', 'c'].includes(key)) ||
+        (event.ctrlKey && key === 'u')
+
+      if (key === 'f12' || inspectorShortcut) event.preventDefault()
+    }
+
+    document.addEventListener('copy', preventAction)
+    document.addEventListener('contextmenu', preventAction)
+    document.addEventListener('keydown', blockInspectorShortcut)
+
+    return () => {
+      document.removeEventListener('copy', preventAction)
+      document.removeEventListener('contextmenu', preventAction)
+      document.removeEventListener('keydown', blockInspectorShortcut)
+    }
+  }, [])
+
+  useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -767,7 +790,8 @@ function App() {
             PAULO FONTES
           </a>
           <span>
-            {new Date().getFullYear()} · PAULO FONTES · DESENVOLVIMENTO DE SOFTWARE · ARACAJU, BR
+            {new Date().getFullYear()} · PAULO FONTES · DESENVOLVIMENTO DE
+            SOFTWARE · ARACAJU, BR
           </span>
           <div>
             <a href={links.github} target="_blank" rel="noreferrer">
