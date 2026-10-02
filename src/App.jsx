@@ -8,9 +8,18 @@ import {
   Linkedin,
   Mail,
   Menu,
+  Plus,
   X,
 } from 'lucide-react'
-import { experience, links, projects, skills } from './content'
+import { links, projects } from './content'
+import {
+  CodeMarquee,
+  ExperienceJourney,
+  FloatingCode,
+  MotionEffects,
+  SkillGalaxy,
+  StarField,
+} from './Motion'
 
 const navigation = [
   { label: 'Sobre', href: '#sobre' },
@@ -139,24 +148,78 @@ function ProjectVisual({ type }) {
   )
 }
 
-function ProjectCard({ project }) {
+function ProjectChapter({ project }) {
+  const [expanded, setExpanded] = useState(false)
   return (
-    <article className="project-card reveal" id={`projeto-${project.number}`}>
-      <ProjectVisual type={project.visual} />
-      <div className="project-body">
-        <div className="project-meta">
-          <span>{project.number} / SELECTED WORK</span>
+    <article
+      className={`project-chapter project-${project.visual}`}
+      id={`projeto-${project.number}`}
+    >
+      <div className="project-artwork reveal">
+        <span className="project-big-number" aria-hidden="true">
+          {project.number}
+        </span>
+        <div className="project-orbit-frame">
+          <span className="project-orbital-ring" aria-hidden="true">
+            <i />
+          </span>
+          <span
+            className="project-orbital-ring second-ring"
+            aria-hidden="true"
+          />
+          <a
+            className="project-portal"
+            href={project.links[0].url}
+            target="_blank"
+            rel="noreferrer"
+            aria-label={`Explorar ${project.title}`}
+          >
+            <ProjectVisual type={project.visual} />
+            <span className="portal-light" aria-hidden="true" />
+            <span className="portal-pointer" aria-hidden="true">
+              <ArrowUpRight size={22} />
+              <span>EXPLORAR</span>
+            </span>
+          </a>
+          <span className="project-orbit-label" aria-hidden="true">
+            MISSION_{project.number} <i /> CODE IN MOTION
+          </span>
+        </div>
+      </div>
+      <div className="project-editorial reveal">
+        <div className="project-chapter-meta">
+          <span>
+            <i /> PROJETO / {project.number}
+          </span>
           <span>{project.category}</span>
         </div>
         <h3>{project.title}</h3>
         <p className="project-summary">{project.summary}</p>
-        <p className="project-detail">{project.detail}</p>
-        <div className="tag-list">
+        <button
+          className="project-discover"
+          type="button"
+          aria-expanded={expanded}
+          aria-controls={`project-notes-${project.number}`}
+          onClick={() => setExpanded(!expanded)}
+        >
+          {expanded ? 'Fechar detalhes' : 'Dentro dessa missão'}
+          <Plus size={17} aria-hidden="true" />
+        </button>
+        <div
+          className={`project-notes ${expanded ? 'is-expanded' : ''}`}
+          id={`project-notes-${project.number}`}
+          inert={!expanded}
+        >
+          <div>
+            <p>{project.detail}</p>
+          </div>
+        </div>
+        <div className="project-technologies">
           {project.tags.map((tag) => (
             <span key={tag}>{tag}</span>
           ))}
         </div>
-        <div className="project-links">
+        <div className="project-destinations">
           {project.links.map((link) => (
             <a key={link.url} href={link.url} target="_blank" rel="noreferrer">
               {link.label}
@@ -235,10 +298,9 @@ function App() {
     const sections = sectionIds.map((id) => document.getElementById(id))
     const hero = document.querySelector('.hero')
     const about = document.querySelector('.about')
-    const timeline = document.querySelector('.timeline')
-    const experienceSection = document.querySelector('.experience')
     const contact = document.querySelector('.contact')
-    const cards = [...document.querySelectorAll('.project-card')]
+    const cards = [...document.querySelectorAll('.project-chapter')]
+    const waypoints = [...document.querySelectorAll('.project-waypoint')]
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
     let frame = 0
 
@@ -272,17 +334,30 @@ function App() {
         current === currentSection ? current : currentSection,
       )
 
+      let currentProject = 0
+      cards.forEach((card, index) => {
+        if (card.getBoundingClientRect().top <= viewportHeight * 0.52)
+          currentProject = index
+      })
+      waypoints.forEach((waypoint, index) => {
+        waypoint.classList.toggle('is-active', index === currentProject)
+        if (index === currentProject)
+          waypoint.setAttribute('aria-current', 'location')
+        else waypoint.removeAttribute('aria-current')
+      })
+
       if (reducedMotion.matches) {
         hero.style.removeProperty('--hero-shift')
         hero.style.removeProperty('--star-shift')
         hero.style.removeProperty('--orbit-spin')
         hero.style.removeProperty('--glow-shift')
         about.style.removeProperty('--about-shift')
-        experienceSection.style.removeProperty('--experience-spin')
-        timeline.style.removeProperty('--timeline-progress')
         contact.style.removeProperty('--contact-shift')
         cards.forEach((card) => {
           card.style.removeProperty('--visual-shift')
+          card.style.removeProperty('--chapter-shift')
+          card.style.removeProperty('--chapter-rotate')
+          card.style.removeProperty('--number-shift')
           card.classList.remove('is-centered')
         })
         return
@@ -305,19 +380,6 @@ function App() {
         `${(0.5 - aboutProgress) * 36}px`,
       )
 
-      const timelineRect = timeline.getBoundingClientRect()
-      const timelineProgress = clamp(
-        (viewportHeight * 0.52 - timelineRect.top) / timelineRect.height,
-      )
-      timeline.style.setProperty(
-        '--timeline-progress',
-        `${timelineProgress * 100}%`,
-      )
-      experienceSection.style.setProperty(
-        '--experience-spin',
-        `${timelineProgress * 45}deg`,
-      )
-
       const contactRect = contact.getBoundingClientRect()
       const contactProgress = clamp(
         (viewportHeight - contactRect.top) /
@@ -332,7 +394,20 @@ function App() {
         )
         card.style.setProperty(
           '--visual-shift',
-          `${(0.5 - cardProgress) * 18}px`,
+          `${(0.5 - cardProgress) * 32}px`,
+        )
+        const direction = Number(card.id.slice(-2)) % 2 ? 1 : -1
+        card.style.setProperty(
+          '--chapter-shift',
+          `${(0.5 - cardProgress) * 75}px`,
+        )
+        card.style.setProperty(
+          '--chapter-rotate',
+          `${(0.5 - cardProgress) * 10 * direction}deg`,
+        )
+        card.style.setProperty(
+          '--number-shift',
+          `${(cardProgress - 0.5) * 100}px`,
         )
         card.classList.toggle(
           'is-centered',
@@ -348,10 +423,13 @@ function App() {
     updateScroll()
     window.addEventListener('scroll', scheduleUpdate, { passive: true })
     window.addEventListener('resize', scheduleUpdate)
+    const layoutObserver = new ResizeObserver(scheduleUpdate)
+    layoutObserver.observe(document.getElementById('projetos'))
     reducedMotion.addEventListener('change', scheduleUpdate)
     return () => {
       window.removeEventListener('scroll', scheduleUpdate)
       window.removeEventListener('resize', scheduleUpdate)
+      layoutObserver.disconnect()
       reducedMotion.removeEventListener('change', scheduleUpdate)
       if (frame) window.cancelAnimationFrame(frame)
     }
@@ -359,6 +437,7 @@ function App() {
 
   return (
     <>
+      <MotionEffects />
       <a className="skip-link" href="#conteudo">
         Ir para o conteúdo
       </a>
@@ -431,6 +510,7 @@ function App() {
 
       <main id="conteudo">
         <section className="hero" id="inicio">
+          <StarField />
           <div className="hero-stars" aria-hidden="true" />
           <div className="hero-glow" aria-hidden="true" />
           <div className="hero-container">
@@ -487,7 +567,7 @@ function App() {
             <div
               className="hero-art"
               role="img"
-              aria-label="Ilustração abstrata de um planeta com órbitas"
+              aria-label="Universo de programação: um planeta com órbitas e código flutuante"
             >
               <div className="orbit orbit-outer">
                 <span className="orbit-satellite" />
@@ -499,6 +579,7 @@ function App() {
                 <div className="planet-shine" />
                 <div className="planet-texture" />
               </div>
+              <FloatingCode />
               <div className="art-coordinates">
                 10°55′S &nbsp; 37°04′W <span>— ARACAJU, BR</span>
               </div>
@@ -513,6 +594,8 @@ function App() {
           </a>
           <span className="hero-side-label">PORTFOLIO / 2026</span>
         </section>
+
+        <CodeMarquee />
 
         <section className="about section-shell" id="sobre">
           <div className="section-container about-grid">
@@ -585,7 +668,7 @@ function App() {
                     Trabalho que sai <em>do papel.</em>
                   </>
                 }
-                description="Uma seleção enxuta de projetos que mostram como penso, construo e resolvo problemas reais."
+                description="Cada projeto, uma missão diferente. Explore as interfaces e descubra o código, as decisões e as ideias por trás de cada entrega."
               />
               <a
                 href={links.github}
@@ -596,9 +679,34 @@ function App() {
                 Explorar GitHub <ArrowUpRight size={17} />
               </a>
             </div>
-            <div className="projects-grid">
+            <div className="project-gallery-topline">
+              <span>
+                <ArrowDown size={13} /> ROLE PARA EXPLORAR{' '}
+                <span className="gallery-pointer-hint">
+                  · MOVA PARA DESCOBRIR
+                </span>
+              </span>
+              <span>04 MISSÕES / SELECTED WORK</span>
+            </div>
+            <div className="project-journey">
+              <nav
+                className="project-flight-nav"
+                aria-label="Navegar pelos projetos"
+              >
+                {projects.map((project) => (
+                  <a
+                    className="project-waypoint"
+                    key={project.number}
+                    href={`#projeto-${project.number}`}
+                    aria-label={`Ir para ${project.title}`}
+                  >
+                    <span>{project.number}</span>
+                    <i aria-hidden="true" />
+                  </a>
+                ))}
+              </nav>
               {projects.map((project) => (
-                <ProjectCard key={project.number} project={project} />
+                <ProjectChapter key={project.number} project={project} />
               ))}
             </div>
           </div>
@@ -619,27 +727,11 @@ function App() {
                 Tecnologia, pesquisa e colaboração em equipes diversas moldaram
                 minha forma de resolver problemas.
               </p>
-              <div className="experience-decoration" aria-hidden="true">
-                <i />
-                <i />
-              </div>
+              <span className="journey-instruction">
+                <ArrowDown size={14} /> O SCROLL TRAÇA O CAMINHO
+              </span>
             </div>
-            <div className="timeline">
-              {experience.map((item, index) => (
-                <article className="timeline-item reveal" key={item.company}>
-                  <div className="timeline-top">
-                    <span>{String(index + 1).padStart(2, '0')}</span>
-                    <span className="timeline-period">{item.period}</span>
-                  </div>
-                  <h3>{item.role}</h3>
-                  <p className="timeline-company">{item.company}</p>
-                  {item.highlight && (
-                    <span className="timeline-highlight">{item.highlight}</span>
-                  )}
-                  <p className="timeline-description">{item.description}</p>
-                </article>
-              ))}
-            </div>
+            <ExperienceJourney />
           </div>
         </section>
 
@@ -649,12 +741,13 @@ function App() {
               eyebrow="04 / FERRAMENTAS & TECNOLOGIAS"
               title={
                 <>
-                  Ferramentas a serviço <em>das ideias.</em>
+                  Meu universo <em>de possibilidades.</em>
                 </>
               }
-              description="Escolha um projeto para descobrir as habilidades que desenvolvi e as ferramentas usadas em cada solução."
+              description="Nenhuma tecnologia vive sozinha. Explore as constelações e descubra como conecto código, dados e design para dar vida às ideias."
             />
-            <div className="skill-explorer reveal">
+            <SkillGalaxy onProjectSelect={setSelectedProject} />
+            <div className="skill-explorer reveal" id="skill-projects">
               <div className="skill-explorer-topline">
                 <span>NA PRÁTICA / CONEXÕES REAIS</span>
                 <span>01 — 0{projects.length}</span>
@@ -714,27 +807,6 @@ function App() {
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="skills-index-heading reveal">
-              <span>REPERTÓRIO COMPLETO</span>
-              <p>Competências que conecto conforme o desafio.</p>
-            </div>
-            <div className="skills-grid">
-              {skills.map((group, index) => (
-                <article className="skill-card reveal" key={group.title}>
-                  <div className="skill-card-header">
-                    <span>0{index + 1}</span>
-                    <span className="skill-card-accent" aria-hidden="true" />
-                  </div>
-                  <h3>{group.title}</h3>
-                  <p className="skill-card-description">{group.description}</p>
-                  <div className="skill-items">
-                    {group.items.map((item) => (
-                      <span key={item}>{item}</span>
-                    ))}
-                  </div>
-                </article>
-              ))}
             </div>
             <div className="education-strip reveal">
               <div>
