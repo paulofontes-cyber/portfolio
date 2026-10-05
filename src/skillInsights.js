@@ -1,4 +1,4 @@
-// Descriptions explain the tools without implying proficiency scores or certifications.
+
 export const skillInsights = {
   'Node.js': [
     'Serviços em JavaScript, integração entre sistemas e processamento fora da interface.',
@@ -104,7 +104,7 @@ export const skillInsights = {
     'Ferramenta de IA no repertório de desenvolvimento e exploração de código.',
     'explore(code, possibilities)',
   ],
-  Gemini: [
+  'Cloud': [
     'Ferramenta de IA para experimentar ideias e investigar novas possibilidades.',
     'prompt → explore → refine',
   ],
