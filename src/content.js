@@ -104,8 +104,8 @@ export const projects = [
     tags: ['Interface web', 'Dashboards', 'Pesquisa aplicada'],
     links: [
       {
-        label: 'Ver repositório',
-        url: 'https://github.com/paulofontes-cyber/IC_INTERFACE_V1',
+        label: 'Ver site Demo',
+        url: 'https://paulofontes-cyber.github.io/IC_INTERFACE_V1/',
       },
     ],
     visual: 'research',
@@ -129,7 +129,7 @@ export const experience = [
       'Na parceria com a Fundação de Saúde Parreiras Horta, desenvolvi uma nova interface para o site do SVO. No projeto da JotaNunes Construtora, criei o design e liderei o desenvolvimento do front-end.',
   },
   {
-    period: '2025',
+    period: 'Contrato Temporário',
     role: 'ADS - Trust & Safety',
     company: 'MKIT (Hong Kong) Holdings Limited',
     description:
@@ -143,7 +143,7 @@ export const experience = [
       'Projetos da comunidade, tradução EN–PT, moderação, design e liderança de equipes.',
   },
   {
-    period: '2024',
+    period: 'Contrato Temporário 2024',
     role: 'Tradutor freelancer',
     company: 'RWS Group',
     description:
@@ -187,12 +187,13 @@ export const skills = [
     ],
   },
   {
-    title: 'IA & pesquisa',
+    title: 'IA & Pesquisa',
     description: 'Investigação e ferramentas para experimentar novas soluções.',
     items: [
-      'IA aplicada ao desenvolvimento',
+      'IA Aplicada ao Desenvolvimento',
       'OpenAI Codex',
-      'Gemini',
+      'Cloud',
+      'AWS',
       'Google Cloud',
     ],
   },
