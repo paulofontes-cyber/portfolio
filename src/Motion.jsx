@@ -350,13 +350,13 @@ export function ExperienceJourney() {
         </article>
       ))}
       <span className="journey-end">
-        <span className="pulse-dot" /> A PRÓXIMA COORDENADA ESTÁ POR VIR
+        <span className="pulse-dot" /> A PRÓXIMA JORNADA ESTÁ POR VIR
       </span>
     </div>
   )
 }
 
-const categorySymbols = ['{}', 'db', '</>', '✳', 'AI']
+const categorySymbols = ['{}', 'db', '</>', '>_', '++1']
 const categoryCode = [
   'await api.create(idea)',
   'connect(data, possibilities)',
