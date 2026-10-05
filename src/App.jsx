@@ -461,7 +461,7 @@ function App() {
           </span>
           <span>
             PAULO FONTES
-            <span className="brand-subtitle">/ SOFTWARE DEVELOPER</span>
+            <span className="brand-subtitle">/ SOFTWARE ENGINNER</span>
           </span>
         </a>
         <nav
