@@ -1,7 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { ArrowUpRight } from 'lucide-react'
-import { experience, projects, skills } from './content'
-import { skillInsights } from './skillInsights'
+import { experience } from './content'
 
 const REDUCED = '(prefers-reduced-motion: reduce)'
 const clamp = (value, min = 0, max = 1) => Math.max(min, Math.min(max, value))
@@ -112,7 +110,7 @@ export function MotionEffects() {
       )
     })
     document
-      .querySelectorAll('.hero, .ticker, .work-viewer, .matrix')
+      .querySelectorAll('.hero, .ticker, .work-viewer')
       .forEach((element) => visibility.observe(element))
 
     const hero = document.querySelector('.hero')
@@ -314,143 +312,5 @@ export function ExperienceJourney() {
         </div>
       </li>
     </ol>
-  )
-}
-
-const categorySlugs = ['back-end', 'dados', 'front-end', 'design', 'ia']
-const categoryCode = [
-  'await api.create(idea)',
-  'connect(data, possibilities)',
-  '<Experience idea={future} />',
-  'prototype → test → build',
-  'learn(); experiment(); repeat();',
-]
-const categoryProjects = [[0], [0], [1, 2, 3], [1, 3], [3]]
-const glyphs = {
-  TypeScript: 'TS',
-  JavaScript: 'JS',
-  'Node.js': 'Nd',
-  'APIs REST': '{}',
-  PostgreSQL: 'Pg',
-  'UX/UI': 'Ux',
-  'Design responsivo': 'Rs',
-  'Fluxos de usuário': 'Fx',
-  'IA Aplicada ao Desenvolvimento': 'Ai',
-  'OpenAI Codex': 'Cx',
-  'Google Cloud': 'Gc',
-}
-const insightKeys = Object.keys(skillInsights)
-const insightFor = (item) =>
-  skillInsights[item] ||
-  skillInsights[
-    insightKeys.find((key) => key.toLowerCase() === item.toLowerCase())
-  ]
-
-export function SkillMatrix({ onProjectSelect }) {
-  const [category, setCategory] = useState(0)
-  const [selectedSkill, setSelectedSkill] = useState(null)
-  const group = skills[category]
-  const insight = selectedSkill ? insightFor(selectedSkill) : null
-  const code = insight?.[1] || categoryCode[category]
-  const selectCategory = (index) => {
-    setCategory(index)
-    setSelectedSkill(null)
-  }
-  return (
-    <div className="matrix reveal">
-      <div className="matrix-tabs" aria-label="Áreas de conhecimento">
-        <span className="matrix-tabs-label">~/stack</span>
-        {skills.map((skill, index) => (
-          <button
-            type="button"
-            className={category === index ? 'is-selected' : ''}
-            key={skill.title}
-            aria-pressed={category === index}
-            onClick={() => selectCategory(index)}
-          >
-            <span className="matrix-tab-index" aria-hidden="true">
-              0{index + 1}
-            </span>
-            <span className="matrix-tab-title">{skill.title}</span>
-            <span className="matrix-tab-count" aria-hidden="true">
-              {String(skill.items.length).padStart(2, '0')}
-            </span>
-          </button>
-        ))}
-      </div>
-
-      <div className="matrix-panel">
-        <div className="matrix-head">
-          <span>
-            ~/stack/{categorySlugs[category]}
-            <i aria-hidden="true" />
-          </span>
-          <p>{group.description}</p>
-        </div>
-        <div
-          className="matrix-grid"
-          data-spotlight
-          key={category}
-          aria-label={`Ferramentas de ${group.title}`}
-        >
-          {group.items.map((item, index) => (
-            <button
-              type="button"
-              key={item}
-              className={`matrix-cell spot-cell ${selectedSkill === item ? 'is-selected' : ''}`}
-              style={{ '--i': index }}
-              aria-pressed={selectedSkill === item}
-              onClick={() =>
-                setSelectedSkill(selectedSkill === item ? null : item)
-              }
-            >
-              <span className="matrix-cell-index" aria-hidden="true">
-                {String(index + 1).padStart(2, '0')}
-              </span>
-              <span className="matrix-cell-glyph" aria-hidden="true">
-                {glyphs[item] || item.slice(0, 2)}
-              </span>
-              <span className="matrix-cell-name">{item}</span>
-            </button>
-          ))}
-        </div>
-        <div
-          className="matrix-terminal"
-          key={`${category}-${selectedSkill}`}
-          aria-live="polite"
-        >
-          <div className="matrix-terminal-bar" aria-hidden="true">
-            <span>stdout</span>
-            <span>{selectedSkill || group.title}</span>
-          </div>
-          <code style={{ '--chars': code.length }}>
-            <span aria-hidden="true">$ </span>
-            {code}
-          </code>
-          <p>{insight?.[0] || group.description}</p>
-        </div>
-        <div className="matrix-links">
-          <span>ESSA ÁREA NA PRÁTICA</span>
-          {categoryProjects[category].map((index) => (
-            <button
-              type="button"
-              key={index}
-              onClick={() => {
-                onProjectSelect(index)
-                document.getElementById('skill-projects').scrollIntoView({
-                  behavior: window.matchMedia(REDUCED).matches
-                    ? 'instant'
-                    : 'smooth',
-                  block: 'start',
-                })
-              }}
-            >
-              {projects[index].title}
-              <ArrowUpRight size={15} aria-hidden="true" />
-            </button>
-          ))}
-        </div>
-      </div>
-    </div>
   )
 }
