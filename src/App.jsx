@@ -18,8 +18,8 @@ import {
   LiveClock,
   MotionEffects,
   ScrambleText,
-  SkillMatrix,
 } from './Motion'
+import { SkillBoard } from './SkillBoard'
 import Badge from './Badge'
 import { WorkIndex } from './Projects'
 
@@ -567,9 +567,9 @@ function App() {
                   Meu universo <em>de possibilidades.</em>
                 </>
               }
-              description="Nenhuma tecnologia vive sozinha. Escolha uma área, selecione uma ferramenta e veja como ela aparece no meu trabalho."
+              description="Nenhuma tecnologia vive sozinha. Escolha uma área no controlador, passe pelos componentes e siga as trilhas até os projetos onde cada ferramenta foi usada."
             />
-            <SkillMatrix onProjectSelect={setSelectedProject} />
+            <SkillBoard onProjectSelect={setSelectedProject} />
 
             <div className="practice reveal" id="skill-projects">
               <div className="practice-topline">
