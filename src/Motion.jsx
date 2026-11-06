@@ -1,229 +1,238 @@
-import { useEffect, useRef, useState } from 'react'
-import { ArrowUpRight, Code2, MoveUpRight, Orbit, Rocket } from 'lucide-react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { ArrowUpRight } from 'lucide-react'
 import { experience, projects, skills } from './content'
 import { skillInsights } from './skillInsights'
 
-// Decorative motion never owns navigation or blocks the native pointer.
+const REDUCED = '(prefers-reduced-motion: reduce)'
+const clamp = (value, min = 0, max = 1) => Math.max(min, Math.min(max, value))
+
+export function useMedia(query) {
+  const [matches, setMatches] = useState(() => window.matchMedia(query).matches)
+  useEffect(() => {
+    const media = window.matchMedia(query)
+    const update = () => setMatches(media.matches)
+    update()
+    media.addEventListener('change', update)
+    return () => media.removeEventListener('change', update)
+  }, [query])
+  return matches
+}
+
+export const useReducedMotion = () => useMedia(REDUCED)
+
+// Aracaju shares the America/Maceio time zone (UTC−3, no DST).
+const timeFormat = new Intl.DateTimeFormat('pt-BR', {
+  timeZone: 'America/Maceio',
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit',
+  hour12: false,
+})
+const shortTimeFormat = new Intl.DateTimeFormat('pt-BR', {
+  timeZone: 'America/Maceio',
+  hour: '2-digit',
+  minute: '2-digit',
+  hour12: false,
+})
+
+export function LiveClock({ seconds = true }) {
+  const [now, setNow] = useState(() => new Date())
+  useEffect(() => {
+    const id = window.setInterval(() => setNow(new Date()), 1000)
+    return () => window.clearInterval(id)
+  }, [])
+  return (
+    <time className="live-clock" dateTime={now.toISOString()}>
+      {(seconds ? timeFormat : shortTimeFormat).format(now)}
+    </time>
+  )
+}
+
+const GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/<>_+*#'
+
+// Visual-only decode effect. The readable label lives in a screen-reader span,
+// so assistive technology never hears the scrambled characters.
+export function ScrambleText({ text, className = '' }) {
+  const ref = useRef(null)
+  useLayoutEffect(() => {
+    ref.current.textContent = text
+  }, [text])
+  useEffect(() => {
+    const element = ref.current
+    const host = element.closest('a, button') || element
+    const reduced = window.matchMedia(REDUCED)
+    let frame = 0
+    const run = () => {
+      if (reduced.matches) return
+      cancelAnimationFrame(frame)
+      const start = performance.now()
+      const duration = 380
+      const tick = (time) => {
+        const progress = Math.min(1, (time - start) / duration)
+        const revealed = Math.floor(progress * text.length)
+        let output = ''
+        for (let i = 0; i < text.length; i++) {
+          const char = text[i]
+          output +=
+            i < revealed || char === ' '
+              ? char
+              : GLYPHS[(Math.random() * GLYPHS.length) | 0]
+        }
+        element.textContent = output
+        if (progress < 1) frame = requestAnimationFrame(tick)
+      }
+      frame = requestAnimationFrame(tick)
+    }
+    host.addEventListener('pointerenter', run)
+    host.addEventListener('focus', run)
+    return () => {
+      host.removeEventListener('pointerenter', run)
+      host.removeEventListener('focus', run)
+      cancelAnimationFrame(frame)
+      element.textContent = text
+    }
+  }, [text])
+  return (
+    <span className={`scramble ${className}`}>
+      <span aria-hidden="true" ref={ref} />
+      <span className="sr-only">{text}</span>
+    </span>
+  )
+}
+
+// Pointer-driven effects share one listener and one animation frame.
+// Nothing here owns navigation or replaces the native cursor.
 export function MotionEffects() {
   useEffect(() => {
     const finePointer = window.matchMedia('(pointer: fine)')
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)')
-    const motionObserver = new IntersectionObserver((entries) => {
+    const reduced = window.matchMedia(REDUCED)
+    const visibility = new IntersectionObserver((entries) => {
       entries.forEach((entry) =>
         entry.target.classList.toggle('motion-active', entry.isIntersecting),
       )
     })
     document
-      .querySelectorAll(
-        '.hero, .code-marquee, .skill-universe, .contact, .project-chapter',
-      )
-      .forEach((element) => motionObserver.observe(element))
+      .querySelectorAll('.hero, .ticker, .work-viewer, .matrix')
+      .forEach((element) => visibility.observe(element))
+
+    const hero = document.querySelector('.hero')
+    const light = document.querySelector('.hero-light')
+    const readout = document.querySelector('[data-pointer-readout]')
     let frame = 0
-    let current = null
     let position = null
-    const reset = () => {
-      if (current) {
-        current.style.removeProperty('--pointer-x')
-        current.style.removeProperty('--pointer-y')
-        current.style.removeProperty('--tilt-x')
-        current.style.removeProperty('--tilt-y')
-        current.style.removeProperty('--spot-x')
-        current.style.removeProperty('--spot-y')
-      }
-      current = null
+    let tiltTarget = null
+    let magnet = null
+
+    const resetTilt = () => {
+      if (!tiltTarget) return
+      ;['--tilt-x', '--tilt-y', '--spot-x', '--spot-y'].forEach((name) =>
+        tiltTarget.style.removeProperty(name),
+      )
+      tiltTarget.classList.remove('is-pointing')
+      tiltTarget = null
     }
+    const resetMagnet = () => {
+      if (!magnet) return
+      magnet.style.removeProperty('--mx')
+      magnet.style.removeProperty('--my')
+      magnet = null
+    }
+
+    const paint = () => {
+      frame = 0
+      if (!position) return
+      const { x, y, target } = position
+
+      if (hero && hero.classList.contains('motion-active')) {
+        const rect = hero.getBoundingClientRect()
+        if (light)
+          light.style.transform = `translate3d(${x - rect.left}px, ${y - rect.top}px, 0)`
+        if (readout)
+          readout.textContent = `X ${String(Math.round(x)).padStart(4, '0')} · Y ${String(Math.round(y - rect.top)).padStart(4, '0')}`
+      }
+
+      const tilt = target?.closest('[data-tilt]')
+      if (tilt !== tiltTarget) resetTilt()
+      if (tilt) {
+        tiltTarget = tilt
+        const rect = tilt.getBoundingClientRect()
+        const px = clamp((x - rect.left) / rect.width)
+        const py = clamp((y - rect.top) / rect.height)
+        const strength = Number(tilt.dataset.tilt) || 5
+        tilt.style.setProperty('--tilt-x', `${(0.5 - py) * strength}deg`)
+        tilt.style.setProperty('--tilt-y', `${(px - 0.5) * strength}deg`)
+        tilt.style.setProperty('--spot-x', `${px * 100}%`)
+        tilt.style.setProperty('--spot-y', `${py * 100}%`)
+        tilt.classList.add('is-pointing')
+      }
+
+      const spotlight = target?.closest('[data-spotlight]')
+      if (spotlight) {
+        spotlight.querySelectorAll('.spot-cell').forEach((cell) => {
+          const rect = cell.getBoundingClientRect()
+          cell.style.setProperty('--cx', `${x - rect.left}px`)
+          cell.style.setProperty('--cy', `${y - rect.top}px`)
+        })
+      }
+
+      const magnetic = target?.closest('[data-magnetic]')
+      if (magnetic !== magnet) resetMagnet()
+      if (magnetic) {
+        magnet = magnetic
+        const rect = magnetic.getBoundingClientRect()
+        const dx = x - (rect.left + rect.width / 2)
+        const dy = y - (rect.top + rect.height / 2)
+        magnetic.style.setProperty('--mx', `${clamp(dx * 0.22, -8, 8)}px`)
+        magnetic.style.setProperty('--my', `${clamp(dy * 0.3, -6, 6)}px`)
+      }
+    }
+
     const move = (event) => {
       if (!finePointer.matches || reduced.matches) return
-      const target = event.target.closest(
-        '.hero-art, .project-portal, .galaxy-map',
-      )
-      if (target !== current) reset()
-      if (!target) return
-      current = target
-      position = { x: event.clientX, y: event.clientY }
-      if (!frame)
-        frame = requestAnimationFrame(() => {
-          frame = 0
-          if (!current || !position) return
-          const rect = current.getBoundingClientRect()
-          const x = (position.x - rect.left) / rect.width - 0.5
-          const y = (position.y - rect.top) / rect.height - 0.5
-          current.style.setProperty('--pointer-x', `${x * 24}px`)
-          current.style.setProperty('--pointer-y', `${y * 24}px`)
-          current.style.setProperty('--tilt-x', `${-y * 5}deg`)
-          current.style.setProperty('--tilt-y', `${x * 5}deg`)
-          current.style.setProperty('--spot-x', `${(x + 0.5) * 100}%`)
-          current.style.setProperty('--spot-y', `${(y + 0.5) * 100}%`)
-        })
+      position = { x: event.clientX, y: event.clientY, target: event.target }
+      if (!frame) frame = requestAnimationFrame(paint)
+    }
+    const leave = () => {
+      position = null
+      resetTilt()
+      resetMagnet()
     }
     document.addEventListener('pointermove', move, { passive: true })
-    document.addEventListener('pointerleave', reset)
-    reduced.addEventListener('change', reset)
+    document.documentElement.addEventListener('pointerleave', leave)
+    reduced.addEventListener('change', leave)
     return () => {
-      motionObserver.disconnect()
+      visibility.disconnect()
       document.removeEventListener('pointermove', move)
-      document.removeEventListener('pointerleave', reset)
-      reduced.removeEventListener('change', reset)
+      document.documentElement.removeEventListener('pointerleave', leave)
+      reduced.removeEventListener('change', leave)
       cancelAnimationFrame(frame)
-      reset()
+      leave()
     }
   }, [])
   return null
 }
 
-export function StarField() {
-  const canvasRef = useRef(null)
-  useEffect(() => {
-    const canvas = canvasRef.current
-    const context = canvas.getContext('2d')
-    if (!context) return
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)')
-    const pointer = { x: -1000, y: -1000 }
-    let width = 0
-    let height = 0
-    let stars = []
-    let frame = 0
-    let visible = false
-    let lastTime = 0
-    const resize = () => {
-      const rect = canvas.getBoundingClientRect()
-      width = rect.width
-      height = rect.height
-      const ratio = Math.min(window.devicePixelRatio || 1, 1.5)
-      canvas.width = width * ratio
-      canvas.height = height * ratio
-      context.setTransform(ratio, 0, 0, ratio, 0, 0)
-      stars = Array.from(
-        { length: Math.min(90, Math.floor(width / 15)) },
-        (_, i) => ({
-          x: (((i * 137.508 + 29) % 1000) / 1000) * width,
-          y: (((i * 271.31 + 53) % 1000) / 1000) * height,
-          size: i % 4 === 0 ? 1.6 : 0.7,
-          speed: 0.3 + (i % 5) * 0.12,
-        }),
-      )
-      if (reduced.matches) draw(0)
-    }
-    const draw = (time) => {
-      const step = reduced.matches ? 0 : Math.min((time - lastTime) / 16.67, 2)
-      lastTime = time
-      context.clearRect(0, 0, width, height)
-      stars.forEach((star, i) => {
-        star.y = (star.y - star.speed * step + height) % height
-        const distance = Math.hypot(star.x - pointer.x, star.y - pointer.y)
-        context.fillStyle =
-          distance < 150
-            ? '#c7fff1'
-            : `rgba(156,229,223,${0.25 + (i % 4) * 0.12})`
-        context.beginPath()
-        context.arc(star.x, star.y, star.size, 0, Math.PI * 2)
-        context.fill()
-        if (distance < 150 && !reduced.matches) {
-          context.strokeStyle = `rgba(156,229,223,${(1 - distance / 150) * 0.25})`
-          context.beginPath()
-          context.moveTo(star.x, star.y)
-          context.lineTo(pointer.x, pointer.y)
-          context.stroke()
-        }
-      })
-      if (visible && !reduced.matches && !document.hidden)
-        frame = requestAnimationFrame(draw)
-    }
-    const start = () => {
-      cancelAnimationFrame(frame)
-      lastTime = performance.now()
-      draw(lastTime)
-    }
-    const move = (event) => {
-      const rect = canvas.getBoundingClientRect()
-      pointer.x = event.clientX - rect.left
-      pointer.y = event.clientY - rect.top
-    }
-    const leave = () => {
-      pointer.x = -1000
-      pointer.y = -1000
-    }
-    const observer = new IntersectionObserver(([entry]) => {
-      visible = entry.isIntersecting
-      start()
-    })
-    const resizeObserver = new ResizeObserver(resize)
-    resize()
-    observer.observe(canvas)
-    resizeObserver.observe(canvas)
-    canvas.parentElement.addEventListener('pointermove', move, {
-      passive: true,
-    })
-    canvas.parentElement.addEventListener('pointerleave', leave)
-    reduced.addEventListener('change', start)
-    document.addEventListener('visibilitychange', start)
-    return () => {
-      cancelAnimationFrame(frame)
-      observer.disconnect()
-      resizeObserver.disconnect()
-      canvas.parentElement.removeEventListener('pointermove', move)
-      canvas.parentElement.removeEventListener('pointerleave', leave)
-      reduced.removeEventListener('change', start)
-      document.removeEventListener('visibilitychange', start)
-    }
-  }, [])
-  return (
-    <canvas className="interactive-stars" ref={canvasRef} aria-hidden="true" />
-  )
-}
-
-export function FloatingCode() {
-  return (
-    <div className="floating-code" aria-hidden="true">
-      <div className="code-fragment fragment-api">
-        <span className="fragment-title">
-          <i /> api.ts
-        </span>
-        <code>
-          <b>const</b> future = <b>await</b>
-          <br /> build({'{'}
-          <em> ideas </em>
-          {'}'});
-        </code>
-        <span className="fragment-foot">
-          200 OK <i /> mission ready
-        </span>
-      </div>
-      <span className="code-symbol symbol-braces">{'{ }'}</span>
-      <span className="code-symbol symbol-tag">{'</>'}</span>
-      <div className="code-fragment fragment-terminal">
-        <span className="fragment-title">
-          ~/universe <i />
-        </span>
-        <code>
-          <em>❯</em> npm run explore
-          <br />
-          <span>✓ possibilities: infinite</span>
-        </code>
-      </div>
-      <span className="mini-planet mini-planet-one" />
-      <span className="mini-planet mini-planet-two" />
-    </div>
-  )
-}
-
 export function CodeMarquee() {
   const words = [
-    '<code />',
-    'IDEIAS EM ÓRBITA',
-    'const curiosity = true;',
     'DO CONCEITO AO DEPLOY',
-    '{ explore(); }',
+    'Node.js',
+    'TypeScript',
+    'PostgreSQL',
+    'const curiosity = true;',
+    'React',
+    'Docker',
+    'Figma',
+    'IA APLICADA',
   ]
   return (
-    <div className="code-marquee" aria-hidden="true">
-      <div className="marquee-track">
+    <div className="ticker" aria-hidden="true">
+      <div className="ticker-track">
         {[0, 1].map((copy) => (
-          <div className="marquee-copy" key={copy}>
+          <div className="ticker-copy" key={copy}>
             {words.map((word) => (
               <span key={word}>
                 {word}
-                <i>✦</i>
+                <i />
               </span>
             ))}
           </div>
@@ -233,88 +242,39 @@ export function CodeMarquee() {
   )
 }
 
+// A changelog whose rail fills as the reader scrolls through it.
 export function ExperienceJourney() {
-  const journeyRef = useRef(null)
-  const svgRef = useRef(null)
-  const pathRef = useRef(null)
-  const shipRef = useRef(null)
-  const [route, setRoute] = useState('')
+  const listRef = useRef(null)
+  const fillRef = useRef(null)
   useEffect(() => {
-    const journey = journeyRef.current
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const list = listRef.current
+    const entries = [...list.querySelectorAll('.log-entry')]
+    const reduced = window.matchMedia(REDUCED)
     let frame = 0
     const update = () => {
       frame = 0
-      const path = pathRef.current
-      if (!path || !path.getAttribute('d')) return
-      const rect = journey.getBoundingClientRect()
-      const length = path.getTotalLength()
-      // The luminous route follows the viewport through the actual node positions.
-      const visibleY = Math.max(
-        0,
-        Math.min(rect.height, window.innerHeight * 0.68 - rect.top),
-      )
-      let low = 0
-      let high = length
-      for (let i = 0; i < 14; i++) {
-        const middle = (low + high) / 2
-        if (path.getPointAtLength(middle).y < visibleY) low = middle
-        else high = middle
-      }
-      const traveled = reduced.matches ? length : (low + high) / 2
-      path.style.strokeDasharray = `${length}`
-      path.style.strokeDashoffset = `${length - traveled}`
-      const point = path.getPointAtLength(traveled)
-      const ahead = path.getPointAtLength(Math.min(length, traveled + 2))
-      const angle =
-        (Math.atan2(ahead.y - point.y, ahead.x - point.x) * 180) / Math.PI + 45
-      shipRef.current.style.transform = `translate(${point.x}px, ${point.y}px) translate(-50%, -50%) rotate(${angle}deg)`
-      shipRef.current.style.opacity =
-        reduced.matches || visibleY === 0 ? '0' : '1'
-      journey.querySelectorAll('.mission-node').forEach((node) => {
-        node
-          .closest('article')
-          .classList.toggle(
-            'is-reached',
-            reduced.matches ||
-              node.offsetTop + node.closest('article').offsetTop <= visibleY,
-          )
+      const line = window.innerHeight * 0.62
+      const rect = list.getBoundingClientRect()
+      const progress = reduced.matches
+        ? 1
+        : clamp((line - rect.top) / Math.max(1, rect.height))
+      fillRef.current.style.transform = `scaleY(${progress})`
+      entries.forEach((entry) => {
+        const node = entry.querySelector('.log-node')
+        entry.classList.toggle(
+          'is-reached',
+          reduced.matches || node.getBoundingClientRect().top < line,
+        )
       })
     }
     const schedule = () => {
       if (!frame) frame = requestAnimationFrame(update)
     }
-    const measure = () => {
-      const rect = journey.getBoundingClientRect()
-      const points = [...journey.querySelectorAll('.mission-node')].map(
-        (node) => {
-          const nodeRect = node.getBoundingClientRect()
-          return {
-            x: nodeRect.left + nodeRect.width / 2 - rect.left,
-            y: nodeRect.top + nodeRect.height / 2 - rect.top,
-          }
-        },
-      )
-      svgRef.current.setAttribute('viewBox', `0 0 ${rect.width} ${rect.height}`)
-      const d = points
-        .map((point, i) => {
-          if (!i) return `M ${point.x} ${point.y}`
-          const previous = points[i - 1]
-          const middle = (previous.y + point.y) / 2
-          return `C ${previous.x} ${middle}, ${point.x} ${middle}, ${point.x} ${point.y}`
-        })
-        .join(' ')
-      setRoute(d)
-      schedule()
-    }
-    const observer = new ResizeObserver(measure)
-    observer.observe(journey)
-    measure()
+    update()
     window.addEventListener('scroll', schedule, { passive: true })
     window.addEventListener('resize', schedule)
     reduced.addEventListener('change', schedule)
     return () => {
-      observer.disconnect()
       cancelAnimationFrame(frame)
       window.removeEventListener('scroll', schedule)
       window.removeEventListener('resize', schedule)
@@ -322,41 +282,42 @@ export function ExperienceJourney() {
     }
   }, [])
   return (
-    <div className="timeline mission-route" ref={journeyRef}>
-      <svg className="journey-line" ref={svgRef} fill="none" aria-hidden="true">
-        <path className="journey-track" d={route} />
-        <path className="journey-progress" d={route} ref={pathRef} />
-      </svg>
-      <span className="journey-ship" ref={shipRef} aria-hidden="true">
-        <Rocket size={21} />
+    <ol className="log" ref={listRef}>
+      <span className="log-rail" aria-hidden="true">
+        <span ref={fillRef} />
       </span>
       {experience.map((item, index) => (
-        <article className="mission-stop" key={item.company}>
-          <span className="mission-node" aria-hidden="true">
-            <span>{String(index + 1).padStart(2, '0')}</span>
-          </span>
-          <div className="mission-story reveal">
-            <span className="mission-coordinate">
-              LOG / {String(index + 1).padStart(2, '0')}{' '}
-              <span>{item.period}</span>
-            </span>
-            <h3>{item.role}</h3>
-            <p className="timeline-company">{item.company}</p>
-            {item.highlight && (
-              <span className="timeline-highlight">{item.highlight}</span>
-            )}
-            <p className="timeline-description">{item.description}</p>
+        <li className="log-entry" key={item.company}>
+          <div className="log-meta">
+            <span>LOG/{String(index + 1).padStart(2, '0')}</span>
+            <span>{item.period}</span>
           </div>
-        </article>
+          <span className="log-node" aria-hidden="true" />
+          <div className="log-body reveal">
+            <h3>{item.role}</h3>
+            <p className="log-company">{item.company}</p>
+            {item.highlight && (
+              <span className="log-highlight">{item.highlight}</span>
+            )}
+            <p className="log-description">{item.description}</p>
+          </div>
+        </li>
       ))}
-      <span className="journey-end">
-        <span className="pulse-dot" /> A PRÓXIMA JORNADA ESTÁ POR VIR
-      </span>
-    </div>
+      <li className="log-entry log-next">
+        <div className="log-meta">
+          <span>LOG/{String(experience.length + 1).padStart(2, '0')}</span>
+          <span>EM ABERTO</span>
+        </div>
+        <span className="log-node" aria-hidden="true" />
+        <div className="log-body">
+          <p className="log-next-label">A próxima jornada está por vir.</p>
+        </div>
+      </li>
+    </ol>
   )
 }
 
-const categorySymbols = ['{}', 'db', '</>', '>_', '++1']
+const categorySlugs = ['back-end', 'dados', 'front-end', 'design', 'ia']
 const categoryCode = [
   'await api.create(idea)',
   'connect(data, possibilities)',
@@ -365,19 +326,40 @@ const categoryCode = [
   'learn(); experiment(); repeat();',
 ]
 const categoryProjects = [[0], [0], [1, 2, 3], [1, 3], [3]]
+const glyphs = {
+  TypeScript: 'TS',
+  JavaScript: 'JS',
+  'Node.js': 'Nd',
+  'APIs REST': '{}',
+  PostgreSQL: 'Pg',
+  'UX/UI': 'Ux',
+  'Design responsivo': 'Rs',
+  'Fluxos de usuário': 'Fx',
+  'IA Aplicada ao Desenvolvimento': 'Ai',
+  'OpenAI Codex': 'Cx',
+  'Google Cloud': 'Gc',
+}
+const insightKeys = Object.keys(skillInsights)
+const insightFor = (item) =>
+  skillInsights[item] ||
+  skillInsights[
+    insightKeys.find((key) => key.toLowerCase() === item.toLowerCase())
+  ]
 
-export function SkillGalaxy({ onProjectSelect }) {
+export function SkillMatrix({ onProjectSelect }) {
   const [category, setCategory] = useState(0)
   const [selectedSkill, setSelectedSkill] = useState(null)
   const group = skills[category]
-  const insight = selectedSkill ? skillInsights[selectedSkill] : null
+  const insight = selectedSkill ? insightFor(selectedSkill) : null
+  const code = insight?.[1] || categoryCode[category]
   const selectCategory = (index) => {
     setCategory(index)
     setSelectedSkill(null)
   }
   return (
-    <div className="skill-universe reveal">
-      <div className="galaxy-navigation" aria-label="Áreas de conhecimento">
+    <div className="matrix reveal">
+      <div className="matrix-tabs" aria-label="Áreas de conhecimento">
+        <span className="matrix-tabs-label">~/stack</span>
         {skills.map((skill, index) => (
           <button
             type="button"
@@ -386,152 +368,88 @@ export function SkillGalaxy({ onProjectSelect }) {
             aria-pressed={category === index}
             onClick={() => selectCategory(index)}
           >
-            <span aria-hidden="true">{categorySymbols[index]}</span>
-            {skill.title}
-            <small aria-hidden="true">0{index + 1}</small>
+            <span className="matrix-tab-index" aria-hidden="true">
+              0{index + 1}
+            </span>
+            <span className="matrix-tab-title">{skill.title}</span>
+            <span className="matrix-tab-count" aria-hidden="true">
+              {String(skill.items.length).padStart(2, '0')}
+            </span>
           </button>
         ))}
       </div>
-      <div className="galaxy-stage">
+
+      <div className="matrix-panel">
+        <div className="matrix-head">
+          <span>
+            ~/stack/{categorySlugs[category]}
+            <i aria-hidden="true" />
+          </span>
+          <p>{group.description}</p>
+        </div>
         <div
-          className="galaxy-map"
-          aria-label={`Constelação de ${group.title}`}
+          className="matrix-grid"
+          data-spotlight
+          key={category}
+          aria-label={`Ferramentas de ${group.title}`}
         >
-          <div className="galaxy-grid" aria-hidden="true" />
-          <div className="galaxy-ring ring-a" aria-hidden="true">
-            <i />
-          </div>
-          <div className="galaxy-ring ring-b" aria-hidden="true">
-            <i />
-          </div>
-          <div className="galaxy-ring ring-c" aria-hidden="true" />
-          <svg
-            className="constellation-lines"
-            viewBox="0 0 600 540"
-            aria-hidden="true"
-          >
-            {group.items.map((item, i) => {
-              const angle = (i / group.items.length) * Math.PI * 2 - Math.PI / 2
-              return (
-                <line
-                  key={item}
-                  x1="300"
-                  y1="270"
-                  x2={300 + Math.cos(angle) * 212}
-                  y2={270 + Math.sin(angle) * 189}
-                  className={selectedSkill === item ? 'is-active' : ''}
-                />
-              )
-            })}
-          </svg>
-          <div className="galaxy-core" aria-hidden="true">
-            <div className="core-sphere">
-              <Code2 size={46} strokeWidth={1} />
-            </div>
-            <span>PAULO.DEV</span>
-          </div>
-          <div className="galaxy-nodes" key={category}>
-            {group.items.map((item, i) => {
-              const angle = (i / group.items.length) * Math.PI * 2 - Math.PI / 2
-              return (
-                <button
-                  type="button"
-                  key={item}
-                  className={`tech-node ${selectedSkill === item ? 'is-selected' : ''}`}
-                  style={{
-                    '--node-x': `${50 + Math.cos(angle) * 35.3}%`,
-                    '--node-y': `${50 + Math.sin(angle) * 35}%`,
-                    '--float-delay': `${-i * 1.3}s`,
-                  }}
-                  aria-pressed={selectedSkill === item}
-                  onClick={() =>
-                    setSelectedSkill(selectedSkill === item ? null : item)
-                  }
-                >
-                  <span className="tech-node-orb" aria-hidden="true">
-                    {item === 'TypeScript'
-                      ? 'TS'
-                      : item === 'JavaScript'
-                        ? 'JS'
-                        : item === 'Node.js'
-                          ? 'N'
-                          : item === 'React'
-                            ? '⚛'
-                            : item.slice(0, 2)}
-                  </span>
-                  <span className="tech-node-label">{item}</span>
-                </button>
-              )
-            })}
-          </div>
-          <span className="galaxy-map-label">
-            <Orbit size={13} /> CLIQUE PARA EXPLORAR
-          </span>
-          <span className="galaxy-map-coordinate" aria-hidden="true">
-            SYS.0{category + 1} / CONNECTED
-          </span>
+          {group.items.map((item, index) => (
+            <button
+              type="button"
+              key={item}
+              className={`matrix-cell spot-cell ${selectedSkill === item ? 'is-selected' : ''}`}
+              style={{ '--i': index }}
+              aria-pressed={selectedSkill === item}
+              onClick={() =>
+                setSelectedSkill(selectedSkill === item ? null : item)
+              }
+            >
+              <span className="matrix-cell-index" aria-hidden="true">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <span className="matrix-cell-glyph" aria-hidden="true">
+                {glyphs[item] || item.slice(0, 2)}
+              </span>
+              <span className="matrix-cell-name">{item}</span>
+            </button>
+          ))}
         </div>
-        <div className="galaxy-insight" key={`${category}-${selectedSkill}`}>
-          <span className="eyebrow">
-            <span className="pulse-dot" /> CONSTELAÇÃO 0{category + 1}
-          </span>
-          <h3>
-            {selectedSkill || group.title}
-            <span>.</span>
-          </h3>
-          <p>{insight?.[0] || group.description}</p>
-          <code className="galaxy-code">
-            <span>❯</span> {insight?.[1] || categoryCode[category]}
-            <i />
+        <div
+          className="matrix-terminal"
+          key={`${category}-${selectedSkill}`}
+          aria-live="polite"
+        >
+          <div className="matrix-terminal-bar" aria-hidden="true">
+            <span>stdout</span>
+            <span>{selectedSkill || group.title}</span>
+          </div>
+          <code style={{ '--chars': code.length }}>
+            <span aria-hidden="true">$ </span>
+            {code}
           </code>
-          <div
-            className="galaxy-tool-list"
-            aria-label={`Ferramentas de ${group.title}`}
-          >
-            {group.items.map((item) => (
-              <button
-                type="button"
-                key={item}
-                aria-pressed={selectedSkill === item}
-                className={selectedSkill === item ? 'is-selected' : ''}
-                onClick={() =>
-                  setSelectedSkill(selectedSkill === item ? null : item)
-                }
-              >
-                {item}
-              </button>
-            ))}
-          </div>
-          <div className="galaxy-connections">
-            <span>ESSA ÁREA NA PRÁTICA</span>
-            {categoryProjects[category].map((index) => (
-              <button
-                type="button"
-                key={index}
-                onClick={() => {
-                  onProjectSelect(index)
-                  document.getElementById('skill-projects').scrollIntoView({
-                    behavior: window.matchMedia(
-                      '(prefers-reduced-motion: reduce)',
-                    ).matches
-                      ? 'instant'
-                      : 'smooth',
-                    block: 'start',
-                  })
-                }}
-              >
-                {projects[index].title}
-                <ArrowUpRight size={17} />
-              </button>
-            ))}
-          </div>
+          <p>{insight?.[0] || group.description}</p>
         </div>
-      </div>
-      <div className="galaxy-footer">
-        <span>
-          <MoveUpRight size={13} /> DIFERENTES TECNOLOGIAS. SOLUÇÕES CONECTADAS.
-        </span>
-        <span>{group.items.length} FERRAMENTAS EM ÓRBITA</span>
+        <div className="matrix-links">
+          <span>ESSA ÁREA NA PRÁTICA</span>
+          {categoryProjects[category].map((index) => (
+            <button
+              type="button"
+              key={index}
+              onClick={() => {
+                onProjectSelect(index)
+                document.getElementById('skill-projects').scrollIntoView({
+                  behavior: window.matchMedia(REDUCED).matches
+                    ? 'instant'
+                    : 'smooth',
+                  block: 'start',
+                })
+              }}
+            >
+              {projects[index].title}
+              <ArrowUpRight size={15} aria-hidden="true" />
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   )
