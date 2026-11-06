@@ -3,23 +3,25 @@ import {
   ArrowDown,
   ArrowRight,
   ArrowUpRight,
-  GraduationCap,
+  Check,
+  Copy,
   Github,
   Linkedin,
   Mail,
   Menu,
-  Plus,
   X,
 } from 'lucide-react'
 import { links, projects } from './content'
 import {
   CodeMarquee,
   ExperienceJourney,
-  FloatingCode,
+  LiveClock,
   MotionEffects,
-  SkillGalaxy,
-  StarField,
+  ScrambleText,
+  SkillMatrix,
 } from './Motion'
+import Badge from './Badge'
+import { WorkIndex } from './Projects'
 
 const navigation = [
   { label: 'Sobre', href: '#sobre' },
@@ -28,207 +30,64 @@ const navigation = [
   { label: 'Ferramentas', href: '#stack' },
 ]
 
-function SectionHeading({ eyebrow, title, description }) {
+const email = links.email.replace('mailto:', '')
+
+function SectionHeading({ index, label, title, description, children }) {
   return (
-    <div className="section-heading reveal">
-      <span className="eyebrow">
-        <span className="eyebrow-line" />
-        {eyebrow}
-      </span>
-      <h2>{title}</h2>
-      {description && <p>{description}</p>}
-    </div>
+    <header className="section-head">
+      <div className="section-tag reveal">
+        <span className="section-index">§{index}</span>
+        <span className="section-label">{label}</span>
+      </div>
+      <h2 className="reveal">{title}</h2>
+      {description && (
+        <p className="section-description reveal">{description}</p>
+      )}
+      {children}
+    </header>
   )
 }
 
-function ProjectVisual({ type }) {
-  if (type === 'jotanunes' || type === 'svo') {
-    return (
-      <div
-        className={`project-visual showcase-visual ${type}-visual`}
-        aria-hidden="true"
-      >
-        <img
-          src={`./${type}-preview.jpg`}
-          alt=""
-          loading="lazy"
-          decoding="async"
-        />
-        <div className="showcase-shade" />
-        <div className="showcase-caption">
-          <span>
-            {type === 'jotanunes'
-              ? 'JOTANUNES / CARREIRAS'
-              : 'FSPH / PORTAL SVO'}
-          </span>
-          <span>
-            INTERFACE <ArrowUpRight size={13} aria-hidden="true" />
-          </span>
-        </div>
-      </div>
-    )
-  }
-
-  if (type === 'reports') {
-    return (
-      <div className="project-visual reports-visual" aria-hidden="true">
-        <div className="visual-orbit orbit-one" />
-        <div className="visual-orbit orbit-two" />
-        <div className="visual-window">
-          <div className="window-top">
-            <span />
-            <span />
-            <span />
-            <i>reports / overview</i>
-          </div>
-          <div className="window-content">
-            <div className="window-sidebar">
-              <b />
-              <b />
-              <b />
-              <b />
-            </div>
-            <div className="window-data">
-              <div className="chart-heading">
-                <em />
-                <small />
-              </div>
-              <div className="chart-bars">
-                <i />
-                <i />
-                <i />
-                <i />
-                <i />
-                <i />
-                <i />
-                <i />
-                <i />
-              </div>
-              <div className="chart-footer">
-                <span />
-                <span />
-                <span />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="visual-badge">
-          <span className="pulse-dot" /> JOB COMPLETED
-        </div>
-      </div>
-    )
-  }
-
+function BrandMark() {
   return (
-    <div className="project-visual research-visual" aria-hidden="true">
-      <div className="research-grid" />
-      <div className="research-card back-card">
-        <div className="research-card-head" />
-        <i />
-        <i />
-        <i />
-      </div>
-      <div className="research-card front-card">
-        <div className="research-card-head">
-          <span />
-          <span />
-        </div>
-        <div className="research-donut">
-          <span />
-        </div>
-        <div className="research-lines">
-          <i />
-          <i />
-          <i />
-        </div>
-      </div>
-      <div className="research-cross cross-one">+</div>
-      <div className="research-cross cross-two">+</div>
-    </div>
+    <span className="brand-mark" aria-hidden="true">
+      <svg viewBox="0 0 34 34" fill="none" focusable="false">
+        <path d="m4 10 6 7-6 7" />
+        <path d="M14 24V10h5a4 4 0 0 1 0 8h-5" className="brand-initial" />
+        <path d="M24 24h6" className="brand-cursor" />
+      </svg>
+    </span>
   )
 }
 
-function ProjectChapter({ project }) {
-  const [expanded, setExpanded] = useState(false)
+function CopyEmail() {
+  const [copied, setCopied] = useState(false)
+  useEffect(() => {
+    if (!copied) return
+    const id = window.setTimeout(() => setCopied(false), 2200)
+    return () => window.clearTimeout(id)
+  }, [copied])
+  if (!navigator.clipboard) return null
   return (
-    <article
-      className={`project-chapter project-${project.visual}`}
-      id={`projeto-${project.number}`}
+    <button
+      type="button"
+      className="copy-email"
+      onClick={() =>
+        navigator.clipboard.writeText(email).then(
+          () => setCopied(true),
+          () => setCopied(false),
+        )
+      }
     >
-      <div className="project-artwork reveal">
-        <span className="project-big-number" aria-hidden="true">
-          {project.number}
-        </span>
-        <div className="project-orbit-frame">
-          <span className="project-orbital-ring" aria-hidden="true">
-            <i />
-          </span>
-          <span
-            className="project-orbital-ring second-ring"
-            aria-hidden="true"
-          />
-          <a
-            className="project-portal"
-            href={project.links[0].url}
-            target="_blank"
-            rel="noreferrer"
-            aria-label={`Explorar ${project.title}`}
-          >
-            <ProjectVisual type={project.visual} />
-            <span className="portal-light" aria-hidden="true" />
-            <span className="portal-pointer" aria-hidden="true">
-              <ArrowUpRight size={22} />
-              <span>EXPLORAR</span>
-            </span>
-          </a>
-          <span className="project-orbit-label" aria-hidden="true">
-            MISSION_{project.number} <i /> CODE IN MOTION
-          </span>
-        </div>
-      </div>
-      <div className="project-editorial reveal">
-        <div className="project-chapter-meta">
-          <span>
-            <i /> PROJETO / {project.number}
-          </span>
-          <span>{project.category}</span>
-        </div>
-        <h3>{project.title}</h3>
-        <p className="project-summary">{project.summary}</p>
-        <button
-          className="project-discover"
-          type="button"
-          aria-expanded={expanded}
-          aria-controls={`project-notes-${project.number}`}
-          onClick={() => setExpanded(!expanded)}
-        >
-          {expanded ? 'Fechar detalhes' : 'Dentro dessa missão'}
-          <Plus size={17} aria-hidden="true" />
-        </button>
-        <div
-          className={`project-notes ${expanded ? 'is-expanded' : ''}`}
-          id={`project-notes-${project.number}`}
-          inert={!expanded}
-        >
-          <div>
-            <p>{project.detail}</p>
-          </div>
-        </div>
-        <div className="project-technologies">
-          {project.tags.map((tag) => (
-            <span key={tag}>{tag}</span>
-          ))}
-        </div>
-        <div className="project-destinations">
-          {project.links.map((link) => (
-            <a key={link.url} href={link.url} target="_blank" rel="noreferrer">
-              {link.label}
-              <ArrowUpRight size={16} />
-            </a>
-          ))}
-        </div>
-      </div>
-    </article>
+      {copied ? (
+        <Check size={15} aria-hidden="true" />
+      ) : (
+        <Copy size={15} aria-hidden="true" />
+      )}
+      <span aria-live="polite">
+        {copied ? 'E-mail copiado' : 'Copiar e-mail'}
+      </span>
+    </button>
   )
 }
 
@@ -272,18 +131,34 @@ function App() {
           }
         })
       },
-      { threshold: 0.12 },
+      { threshold: 0.12, rootMargin: '0px 0px -6% 0px' },
     )
-
-    document
-      .querySelectorAll('.reveal')
-      .forEach((element) => observer.observe(element))
-    return () => observer.disconnect()
+    const observeAll = () =>
+      document
+        .querySelectorAll('.reveal:not(.is-visible)')
+        .forEach((element) => observer.observe(element))
+    observeAll()
+    // Sections that re-render (stack tabs, project notes) can add new nodes.
+    const mutations = new MutationObserver(observeAll)
+    mutations.observe(document.getElementById('conteudo'), {
+      childList: true,
+      subtree: true,
+    })
+    return () => {
+      observer.disconnect()
+      mutations.disconnect()
+    }
   }, [])
 
   useEffect(() => {
     document.body.classList.toggle('menu-open', menuOpen)
-    return () => document.body.classList.remove('menu-open')
+    if (!menuOpen) return () => document.body.classList.remove('menu-open')
+    const onKey = (event) => event.key === 'Escape' && setMenuOpen(false)
+    window.addEventListener('keydown', onKey)
+    return () => {
+      document.body.classList.remove('menu-open')
+      window.removeEventListener('keydown', onKey)
+    }
   }, [menuOpen])
 
   useEffect(() => {
@@ -297,15 +172,10 @@ function App() {
     ]
     const sections = sectionIds.map((id) => document.getElementById(id))
     const hero = document.querySelector('.hero')
-    const about = document.querySelector('.about')
-    const contact = document.querySelector('.contact')
-    const cards = [...document.querySelectorAll('.project-chapter')]
-    const waypoints = [...document.querySelectorAll('.project-waypoint')]
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)')
     let frame = 0
 
-    const clamp = (value) => Math.max(0, Math.min(1, value))
-    const updateScroll = () => {
+    const update = () => {
       frame = 0
       const viewportHeight = window.innerHeight
       const scrollMax = Math.max(
@@ -314,7 +184,7 @@ function App() {
       )
       document.documentElement.style.setProperty(
         '--scroll-progress',
-        `${(window.scrollY / scrollMax) * 100}%`,
+        `${Math.min(1, window.scrollY / scrollMax)}`,
       )
       setHasScrolled((current) => {
         const next = window.scrollY > 24
@@ -326,111 +196,32 @@ function App() {
         if (
           section &&
           section.getBoundingClientRect().top <= viewportHeight * 0.38
-        ) {
+        )
           currentSection = section.id
-        }
       })
       setActiveSection((current) =>
         current === currentSection ? current : currentSection,
       )
 
-      let currentProject = 0
-      cards.forEach((card, index) => {
-        if (card.getBoundingClientRect().top <= viewportHeight * 0.52)
-          currentProject = index
-      })
-      waypoints.forEach((waypoint, index) => {
-        waypoint.classList.toggle('is-active', index === currentProject)
-        if (index === currentProject)
-          waypoint.setAttribute('aria-current', 'location')
-        else waypoint.removeAttribute('aria-current')
-      })
-
-      if (reducedMotion.matches) {
-        hero.style.removeProperty('--hero-shift')
-        hero.style.removeProperty('--star-shift')
-        hero.style.removeProperty('--orbit-spin')
-        hero.style.removeProperty('--glow-shift')
-        about.style.removeProperty('--about-shift')
-        contact.style.removeProperty('--contact-shift')
-        cards.forEach((card) => {
-          card.style.removeProperty('--visual-shift')
-          card.style.removeProperty('--chapter-shift')
-          card.style.removeProperty('--chapter-rotate')
-          card.style.removeProperty('--number-shift')
-          card.classList.remove('is-centered')
-        })
-        return
-      }
-
-      const heroProgress = clamp(
-        window.scrollY / Math.max(1, hero.offsetHeight),
-      )
-      hero.style.setProperty('--hero-shift', `${-heroProgress * 48}px`)
-      hero.style.setProperty('--star-shift', `${heroProgress * 90}px`)
-      hero.style.setProperty('--orbit-spin', `${heroProgress * 24}deg`)
-      hero.style.setProperty('--glow-shift', `${heroProgress * 85}px`)
-
-      const aboutRect = about.getBoundingClientRect()
-      const aboutProgress = clamp(
-        (viewportHeight - aboutRect.top) / (viewportHeight + aboutRect.height),
-      )
-      about.style.setProperty(
-        '--about-shift',
-        `${(0.5 - aboutProgress) * 36}px`,
-      )
-
-      const contactRect = contact.getBoundingClientRect()
-      const contactProgress = clamp(
-        (viewportHeight - contactRect.top) /
-          (viewportHeight + contactRect.height),
-      )
-      contact.style.setProperty('--contact-shift', `${contactProgress * 65}px`)
-
-      cards.forEach((card) => {
-        const rect = card.getBoundingClientRect()
-        const cardProgress = clamp(
-          (viewportHeight - rect.top) / (viewportHeight + rect.height),
-        )
-        card.style.setProperty(
-          '--visual-shift',
-          `${(0.5 - cardProgress) * 32}px`,
-        )
-        const direction = Number(card.id.slice(-2)) % 2 ? 1 : -1
-        card.style.setProperty(
-          '--chapter-shift',
-          `${(0.5 - cardProgress) * 75}px`,
-        )
-        card.style.setProperty(
-          '--chapter-rotate',
-          `${(0.5 - cardProgress) * 10 * direction}deg`,
-        )
-        card.style.setProperty(
-          '--number-shift',
-          `${(cardProgress - 0.5) * 100}px`,
-        )
-        card.classList.toggle(
-          'is-centered',
-          rect.top < viewportHeight * 0.64 &&
-            rect.bottom > viewportHeight * 0.36,
-        )
-      })
+      const heroProgress = reduced.matches
+        ? 0
+        : Math.max(
+            0,
+            Math.min(1, window.scrollY / Math.max(1, hero.offsetHeight)),
+          )
+      hero.style.setProperty('--hero-progress', heroProgress.toFixed(3))
     }
-
-    const scheduleUpdate = () => {
-      if (!frame) frame = window.requestAnimationFrame(updateScroll)
+    const schedule = () => {
+      if (!frame) frame = window.requestAnimationFrame(update)
     }
-    updateScroll()
-    window.addEventListener('scroll', scheduleUpdate, { passive: true })
-    window.addEventListener('resize', scheduleUpdate)
-    const layoutObserver = new ResizeObserver(scheduleUpdate)
-    layoutObserver.observe(document.getElementById('projetos'))
-    reducedMotion.addEventListener('change', scheduleUpdate)
+    update()
+    window.addEventListener('scroll', schedule, { passive: true })
+    window.addEventListener('resize', schedule)
+    reduced.addEventListener('change', schedule)
     return () => {
-      window.removeEventListener('scroll', scheduleUpdate)
-      window.removeEventListener('resize', scheduleUpdate)
-      layoutObserver.disconnect()
-      reducedMotion.removeEventListener('change', scheduleUpdate)
+      window.removeEventListener('scroll', schedule)
+      window.removeEventListener('resize', schedule)
+      reduced.removeEventListener('change', schedule)
       if (frame) window.cancelAnimationFrame(frame)
     }
   }, [])
@@ -438,51 +229,52 @@ function App() {
   return (
     <>
       <MotionEffects />
+      <div className="page-grain" aria-hidden="true" />
+      <div className="page-columns" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+        <span />
+      </div>
       <a className="skip-link" href="#conteudo">
         Ir para o conteúdo
       </a>
+
       <header
-        className={hasScrolled ? 'site-header is-scrolled' : 'site-header'}
+        className={`site-header ${hasScrolled ? 'is-scrolled' : ''} ${menuOpen ? 'is-menu-open' : ''}`}
       >
         <a
           className="brand"
           href="#inicio"
           aria-label="Paulo Fontes, voltar ao início"
         >
-          <span className="brand-mark" aria-hidden="true">
-            <svg viewBox="0 0 34 34" fill="none" focusable="false">
-              <path d="m4 10 6 7-6 7" />
-              <path
-                d="M14 24V10h5a4 4 0 0 1 0 8h-5"
-                className="brand-initial"
-              />
-              <path d="M24 24h6" className="brand-cursor" />
-            </svg>
-          </span>
-          <span>
+          <BrandMark />
+          <span className="brand-text">
             PAULO FONTES
-            <span className="brand-subtitle">/ SOFTWARE ENGINNER</span>
+            <span className="brand-subtitle">SOFTWARE ENGINEER</span>
           </span>
         </a>
         <nav
           className={menuOpen ? 'nav is-open' : 'nav'}
           aria-label="Navegação principal"
         >
-          {navigation.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              className={
-                activeSection === item.href.slice(1) ? 'is-active' : undefined
-              }
-              aria-current={
-                activeSection === item.href.slice(1) ? 'location' : undefined
-              }
-              onClick={() => setMenuOpen(false)}
-            >
-              {item.label}
-            </a>
-          ))}
+          {navigation.map((item, index) => {
+            const active = activeSection === item.href.slice(1)
+            return (
+              <a
+                key={item.href}
+                href={item.href}
+                className={active ? 'is-active' : undefined}
+                aria-current={active ? 'location' : undefined}
+                onClick={() => setMenuOpen(false)}
+              >
+                <span className="nav-index" aria-hidden="true">
+                  0{index + 1}
+                </span>
+                <ScrambleText text={item.label} />
+              </a>
+            )
+          })}
           <a
             className={
               activeSection === 'contato'
@@ -493,9 +285,18 @@ function App() {
             aria-current={activeSection === 'contato' ? 'location' : undefined}
             onClick={() => setMenuOpen(false)}
           >
-            Vamos conversar <ArrowUpRight size={15} />
+            <span className="nav-index" aria-hidden="true">
+              05
+            </span>
+            Vamos conversar <ArrowUpRight size={15} aria-hidden="true" />
           </a>
+          <span className="nav-footer" aria-hidden="true">
+            ARACAJU, BR · <LiveClock seconds={false} />
+          </span>
         </nav>
+        <div className="header-meta" aria-hidden="true">
+          <span className="status-dot" /> ARACAJU <LiveClock seconds={false} />
+        </div>
         <button
           className="menu-toggle"
           type="button"
@@ -503,30 +304,38 @@ function App() {
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen(!menuOpen)}
         >
-          {menuOpen ? <X size={24} /> : <Menu size={24} />}
+          {menuOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
         <span className="scroll-progress" aria-hidden="true" />
       </header>
 
       <main id="conteudo">
         <section className="hero" id="inicio">
-          <StarField />
-          <div className="hero-stars" aria-hidden="true" />
-          <div className="hero-glow" aria-hidden="true" />
-          <div className="hero-container">
+          <div className="hero-light" aria-hidden="true" />
+          <div className="hero-inner">
             <div className="hero-copy">
-              <div className="availability">
-                <span className="pulse-dot" /> DESENVOLVIMENTO · PESQUISA ·
-                INOVAÇÃO{' '}
-                <ArrowUpRight
-                  className="availability-arrow"
-                  size={15}
-                  aria-hidden="true"
-                />
+              <div className="hero-meta">
+                <span>§00 — PORTFÓLIO / 2026</span>
+                <span className="hero-meta-tags">
+                  <i className="status-dot" /> DESENVOLVIMENTO · PESQUISA ·
+                  INOVAÇÃO
+                </span>
               </div>
-              <p className="hero-kicker">OLÁ, EU SOU PAULO FONTES</p>
-              <h1>
-                Construindo <em>soluções</em> que vão mais longe.
+              <p className="hero-kicker">Olá, eu sou Paulo Fontes</p>
+              <h1 aria-label="Construindo soluções que vão mais longe.">
+                <span className="line" aria-hidden="true">
+                  <span>Construindo</span>
+                </span>
+                <span className="line" aria-hidden="true">
+                  <span>
+                    <em>soluções</em> que
+                  </span>
+                </span>
+                <span className="line" aria-hidden="true">
+                  <span>
+                    vão mais longe<b className="h1-cursor">.</b>
+                  </span>
+                </span>
               </h1>
               <p className="hero-description">
                 Desenvolvedor de software com foco em back-end e full stack.
@@ -534,181 +343,196 @@ function App() {
                 escaláveis e bem pensadas.
               </p>
               <div className="hero-actions">
-                <a className="button button-primary" href="#projetos">
-                  Explorar projetos <ArrowUpRight size={18} />
-                </a>
-                <a className="button button-text" href="#sobre">
-                  Conheça minha trajetória <ArrowRight size={18} />
-                </a>
-              </div>
-              <div className="hero-social">
-                <span>CONECTE-SE</span>
                 <a
-                  href={links.github}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="GitHub"
+                  className="button button-primary"
+                  href="#projetos"
+                  data-magnetic
                 >
-                  <Github size={19} />
+                  <span>Explorar projetos</span>
+                  <ArrowUpRight size={18} aria-hidden="true" />
                 </a>
-                <a
-                  href={links.linkedin}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="LinkedIn"
-                >
-                  <Linkedin size={19} />
-                </a>
-                <a href={links.email} aria-label="Enviar e-mail">
-                  <Mail size={19} />
+                <a className="button button-ghost" href="#sobre">
+                  Conheça minha trajetória{' '}
+                  <ArrowRight size={17} aria-hidden="true" />
                 </a>
               </div>
             </div>
-            <div
-              className="hero-art"
-              role="img"
-              aria-label="Universo de programação: um planeta com órbitas e código flutuante"
-            >
-              <div className="orbit orbit-outer">
-                <span className="orbit-satellite" />
-              </div>
-              <div className="orbit orbit-mid" />
-              <div className="orbit orbit-inner" />
-              <div className="planet-halo" />
-              <div className="planet">
-                <div className="planet-shine" />
-                <div className="planet-texture" />
-              </div>
-              <FloatingCode />
-              <div className="art-coordinates">
-                10°55′S &nbsp; 37°04′W <span>— ARACAJU, BR</span>
-              </div>
-              <div className="art-label">
-                <span>01 / 03</span>
-                <i /> EXPLORANDO NOVAS POSSIBILIDADES
-              </div>
+            <div className="hero-badge">
+              <Badge />
+              <p className="badge-hint" aria-hidden="true">
+                <span className="hint-fine">ARRASTE · CLIQUE PARA VIRAR</span>
+                <span className="hint-touch">
+                  ARRASTE PARA OS LADOS · TOQUE PARA VIRAR
+                </span>
+              </p>
             </div>
           </div>
-          <a className="scroll-cue" href="#sobre">
-            <ArrowDown size={15} /> SCROLL TO EXPLORE
+          <div className="hero-readout">
+            <div>
+              <span>FOCO</span>
+              <b>Back-end · Full stack · IA</b>
+            </div>
+            <div>
+              <span>BASE</span>
+              <b>10°55′S 37°04′W — Aracaju, BR</b>
+            </div>
+            <div className="readout-clock">
+              <span>HORA LOCAL</span>
+              <b>
+                <LiveClock /> <small>UTC−3</small>
+              </b>
+            </div>
+            <div className="readout-pointer" aria-hidden="true">
+              <span>CURSOR</span>
+              <b data-pointer-readout>X 0000 · Y 0000</b>
+            </div>
+            <div className="readout-social">
+              <a
+                href={links.github}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="GitHub"
+              >
+                <Github size={17} />
+              </a>
+              <a
+                href={links.linkedin}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="LinkedIn"
+              >
+                <Linkedin size={17} />
+              </a>
+              <a href={links.email} aria-label="Enviar e-mail">
+                <Mail size={17} />
+              </a>
+            </div>
+          </div>
+          <a
+            className="scroll-cue"
+            href="#sobre"
+            aria-label="Rolar para a seção Sobre"
+          >
+            <ArrowDown size={14} aria-hidden="true" />
           </a>
-          <span className="hero-side-label">PORTFOLIO / 2026</span>
         </section>
 
         <CodeMarquee />
 
         <section className="about section-shell" id="sobre">
-          <div className="section-container about-grid">
-            <div className="about-photo-wrap reveal">
-              <img
-                src="./paulo-fontes.png"
-                alt="Retrato de Paulo Fontes"
-                className="about-photo"
-                loading="lazy"
-                decoding="async"
-              />
-              <div className="photo-corner photo-corner-top" />
-              <div className="photo-corner photo-corner-bottom" />
-              <span className="photo-label">
-                BEYOND THE CODE <ArrowUpRight size={13} aria-hidden="true" />
-              </span>
-            </div>
-            <div className="about-content">
-              <SectionHeading
-                eyebrow="01 / SOBRE MIM"
-                title={
-                  <>
-                    Curiosidade para explorar. <em>Técnica para construir.</em>
-                  </>
-                }
-              />
-              <p className="about-lead reveal">
-                Sou estudante de Análise e Desenvolvimento de Sistemas na
-                Universidade Tiradentes e bolsista de iniciação científica pelo
-                CNPq, com pesquisa focada em inteligência artificial.
-              </p>
-              <p className="about-secondary reveal">
-                Meu trabalho cruza desenvolvimento de software, dados e produto.
-                Gosto de desenhar soluções completas: da arquitetura de uma API
-                ao cuidado com a experiência de quem usa a interface.
-              </p>
-              <div className="about-facts reveal">
-                <div>
-                  <strong>BACK-END</strong>
-                  <span>APIs & processamento assíncrono</span>
+          <div className="section-container">
+            <SectionHeading
+              index="01"
+              label="Sobre mim"
+              title={
+                <>
+                  Curiosidade para explorar. <em>Técnica para construir.</em>
+                </>
+              }
+            />
+            <div className="about-grid">
+              <figure className="about-figure reveal" data-tilt="3">
+                <div className="about-photo">
+                  <img
+                    src="./paulo-fontes.png"
+                    alt="Retrato de Paulo Fontes"
+                    loading="lazy"
+                    decoding="async"
+                    draggable="false"
+                  />
+                  <img
+                    className="about-photo-color"
+                    src="./paulo-fontes.png"
+                    alt=""
+                    aria-hidden="true"
+                    loading="lazy"
+                    decoding="async"
+                    draggable="false"
+                  />
                 </div>
-                <div>
-                  <strong>FULL STACK</strong>
-                  <span>Do banco de dados à interface</span>
-                </div>
-                <div>
-                  <strong>PESQUISA</strong>
-                  <span>IA aplicada ao desenvolvimento</span>
-                </div>
+                <figcaption>
+                  <span>FIG.02</span>
+                  <span>Paulo Fontes — Aracaju, BR</span>
+                </figcaption>
+                <span className="crop crop-tl" aria-hidden="true" />
+                <span className="crop crop-tr" aria-hidden="true" />
+                <span className="crop crop-bl" aria-hidden="true" />
+                <span className="crop crop-br" aria-hidden="true" />
+              </figure>
+              <div className="about-content">
+                <p className="about-lead reveal">
+                  Sou estudante de Análise e Desenvolvimento de Sistemas na
+                  Universidade Tiradentes e bolsista de iniciação científica
+                  pelo CNPq, com pesquisa focada em inteligência artificial.
+                </p>
+                <p className="about-secondary reveal">
+                  Meu trabalho cruza desenvolvimento de software, dados e
+                  produto. Gosto de desenhar soluções completas: da arquitetura
+                  de uma API ao cuidado com a experiência de quem usa a
+                  interface.
+                </p>
+                <dl className="spec-table reveal">
+                  <div>
+                    <dt>
+                      <span>A</span> Back-end
+                    </dt>
+                    <dd>APIs & processamento assíncrono</dd>
+                  </div>
+                  <div>
+                    <dt>
+                      <span>B</span> Full stack
+                    </dt>
+                    <dd>Do banco de dados à interface</dd>
+                  </div>
+                  <div>
+                    <dt>
+                      <span>C</span> Pesquisa
+                    </dt>
+                    <dd>IA aplicada ao desenvolvimento</dd>
+                  </div>
+                </dl>
+                <a
+                  className="text-link reveal"
+                  href={links.linkedin}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Mais sobre minha trajetória{' '}
+                  <ArrowUpRight size={16} aria-hidden="true" />
+                </a>
               </div>
-              <a
-                className="inline-link reveal"
-                href={links.linkedin}
-                target="_blank"
-                rel="noreferrer"
-              >
-                Mais sobre minha trajetória <ArrowUpRight size={17} />
-              </a>
             </div>
           </div>
         </section>
 
         <section className="projects section-shell" id="projetos">
           <div className="section-container">
-            <div className="projects-intro">
-              <SectionHeading
-                eyebrow="02 / PROJETOS SELECIONADOS"
-                title={
-                  <>
-                    Trabalho que sai <em>do papel.</em>
-                  </>
-                }
-                description="Cada projeto, uma missão diferente. Explore as interfaces e descubra o código, as decisões e as ideias por trás de cada entrega."
-              />
+            <SectionHeading
+              index="02"
+              label="Projetos selecionados"
+              title={
+                <>
+                  Trabalho que sai <em>do papel.</em>
+                </>
+              }
+              description="Cada projeto, um problema diferente. Abra cada entrada para ver o contexto, as decisões e a stack por trás da entrega."
+            >
               <a
                 href={links.github}
-                className="all-projects reveal"
+                className="text-link section-head-link reveal"
                 target="_blank"
                 rel="noreferrer"
               >
-                Explorar GitHub <ArrowUpRight size={17} />
+                Explorar GitHub <ArrowUpRight size={16} aria-hidden="true" />
               </a>
+            </SectionHeading>
+            <div className="work-topline reveal" aria-hidden="true">
+              <span>ÍNDICE</span>
+              <span>TÍTULO</span>
+              <span>ÁREA</span>
+              <span>0{projects.length} ENTRADAS</span>
             </div>
-            <div className="project-gallery-topline">
-              <span>
-                <ArrowDown size={13} /> ROLE PARA EXPLORAR{' '}
-                <span className="gallery-pointer-hint">
-                  · MOVA PARA DESCOBRIR
-                </span>
-              </span>
-              <span>04 MISSÕES / SELECTED WORK</span>
-            </div>
-            <div className="project-journey">
-              <nav
-                className="project-flight-nav"
-                aria-label="Navegar pelos projetos"
-              >
-                {projects.map((project) => (
-                  <a
-                    className="project-waypoint"
-                    key={project.number}
-                    href={`#projeto-${project.number}`}
-                    aria-label={`Ir para ${project.title}`}
-                  >
-                    <span>{project.number}</span>
-                    <i aria-hidden="true" />
-                  </a>
-                ))}
-              </nav>
-              {projects.map((project) => (
-                <ProjectChapter key={project.number} project={project} />
-              ))}
-            </div>
+            <WorkIndex />
           </div>
         </section>
 
@@ -716,19 +540,17 @@ function App() {
           <div className="section-container experience-grid">
             <div className="experience-aside">
               <SectionHeading
-                eyebrow="03 / EXPERIÊNCIA"
+                index="03"
+                label="Experiência"
                 title={
                   <>
                     Uma trajetória em <em>construção constante.</em>
                   </>
                 }
+                description="Tecnologia, pesquisa e colaboração em equipes diversas moldaram minha forma de resolver problemas."
               />
-              <p className="reveal">
-                Tecnologia, pesquisa e colaboração em equipes diversas moldaram
-                minha forma de resolver problemas.
-              </p>
-              <span className="journey-instruction">
-                <ArrowDown size={14} /> O SCROLL TRAÇA O CAMINHO
+              <span className="aside-hint" aria-hidden="true">
+                <ArrowDown size={13} /> git log --reverse
               </span>
             </div>
             <ExperienceJourney />
@@ -738,22 +560,26 @@ function App() {
         <section className="skills section-shell" id="stack">
           <div className="section-container">
             <SectionHeading
-              eyebrow="04 / FERRAMENTAS & TECNOLOGIAS"
+              index="04"
+              label="Ferramentas & tecnologias"
               title={
                 <>
                   Meu universo <em>de possibilidades.</em>
                 </>
               }
-              description="Nenhuma tecnologia vive sozinha. Explore as constelações e descubra como conecto código, dados e design para dar vida às ideias."
+              description="Nenhuma tecnologia vive sozinha. Escolha uma área, selecione uma ferramenta e veja como ela aparece no meu trabalho."
             />
-            <SkillGalaxy onProjectSelect={setSelectedProject} />
-            <div className="skill-explorer reveal" id="skill-projects">
-              <div className="skill-explorer-topline">
+            <SkillMatrix onProjectSelect={setSelectedProject} />
+
+            <div className="practice reveal" id="skill-projects">
+              <div className="practice-topline">
                 <span>NA PRÁTICA / CONEXÕES REAIS</span>
-                <span>01 — 0{projects.length}</span>
+                <span>
+                  {featuredProject.number} — 0{projects.length}
+                </span>
               </div>
               <div
-                className="skill-project-picker"
+                className="practice-picker"
                 aria-label="Explorar competências por projeto"
               >
                 {projects.map((project, index) => (
@@ -768,90 +594,126 @@ function App() {
                   >
                     <span>{project.number}</span>
                     {project.title}
-                    <ArrowUpRight size={15} aria-hidden="true" />
                   </button>
                 ))}
               </div>
-              <div
-                className="skill-project-detail"
-                key={featuredProject.number}
-              >
-                <div className="skill-project-story">
-                  <span className="skill-detail-label">
+              <div className="practice-detail" key={featuredProject.number}>
+                <div className="practice-story">
+                  <span className="practice-label">
                     PROJETO {featuredProject.number} /{' '}
                     {featuredProject.category}
                   </span>
                   <h3>{featuredProject.title}</h3>
                   <p>{featuredProject.capability}</p>
-                  <a href={`#projeto-${featuredProject.number}`}>
-                    Explorar este projeto{' '}
-                    <ArrowUpRight size={17} aria-hidden="true" />
+                  <a
+                    className="text-link"
+                    href={`#projeto-${featuredProject.number}`}
+                  >
+                    Ver no índice de projetos{' '}
+                    <ArrowUpRight size={16} aria-hidden="true" />
                   </a>
                 </div>
-                <div className="skill-project-proof">
+                <div className="practice-proof">
                   <div>
-                    <h4>HABILIDADES DESENVOLVIDAS</h4>
+                    <h4>Habilidades desenvolvidas</h4>
                     <ul className="developed-list">
-                      {featuredProject.developed.map((item) => (
-                        <li key={item}>{item}</li>
+                      {featuredProject.developed.map((item, index) => (
+                        <li key={item}>
+                          <span>0{index + 1}</span>
+                          {item}
+                        </li>
                       ))}
                     </ul>
                   </div>
                   <div>
-                    <h4>STACK UTILIZADA</h4>
-                    <div className="project-stack-list">
+                    <h4>Stack utilizada</h4>
+                    <ul className="tag-list">
                       {featuredProject.tags.map((tag) => (
-                        <span key={tag}>{tag}</span>
+                        <li key={tag}>{tag}</li>
                       ))}
-                    </div>
+                    </ul>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="education-strip reveal">
-              <div>
-                <span className="education-icon" aria-hidden="true">
-                  <GraduationCap size={22} strokeWidth={1.7} />
-                </span>
-                <div>
-                  <strong>FORMAÇÃO & PESQUISA</strong>
-                  <p>
-                    Análise e Desenvolvimento de Sistemas · Universidade
-                    Tiradentes
-                    <br />
-                    Iniciação Científica CNPq em Inteligência Artificial
-                    <br />
+
+            <div className="education reveal">
+              <span className="education-label">FORMAÇÃO & PESQUISA</span>
+              <ul>
+                <li>
+                  <b>Análise e Desenvolvimento de Sistemas</b>
+                  <span>Universidade Tiradentes</span>
+                </li>
+                <li>
+                  <b>Iniciação Científica CNPq</b>
+                  <span>Inteligência Artificial</span>
+                </li>
+                <li>
+                  <b>Idiomas</b>
+                  <span>
                     Português nativo · Inglês avançado · Espanhol básico
-                  </p>
-                </div>
-              </div>
+                  </span>
+                </li>
+              </ul>
               <span className="education-status">
-                EM ANDAMENTO <span className="pulse-dot" />
+                <i className="status-dot" /> EM ANDAMENTO
               </span>
             </div>
           </div>
         </section>
 
         <section className="contact section-shell" id="contato">
-          <div className="contact-stars" aria-hidden="true" />
           <div className="section-container contact-inner">
-            <span className="eyebrow reveal">
-              <span className="eyebrow-line" />
-              05 / PRÓXIMA MISSÃO
-            </span>
-            <h2 className="reveal">
+            <div className="section-tag reveal">
+              <span className="section-index">§05</span>
+              <span className="section-label">Próxima missão</span>
+            </div>
+            <h2 className="contact-title reveal">
               Vamos criar algo <em>extraordinário?</em>
             </h2>
-            <p className="reveal">
-              Tem uma ideia, um desafio técnico ou uma oportunidade em mente?
-              Vamos conversar.
-            </p>
-            <a className="contact-button reveal" href={links.email}>
-              Enviar uma mensagem <ArrowUpRight size={23} />
-            </a>
-            <a className="contact-email reveal" href={links.email}>
-              prof.paulo.e@gmail.com
-            </a>
+            <div className="contact-grid">
+              <p className="reveal">
+                Tem uma ideia, um desafio técnico ou uma oportunidade em mente?
+                Vamos conversar.
+              </p>
+              <div className="contact-actions reveal">
+                <a className="contact-email" href={links.email} data-magnetic>
+                  <span className="contact-email-label">
+                    Enviar uma mensagem
+                  </span>
+                  <span className="contact-email-address">{email}</span>
+                  <ArrowUpRight size={28} aria-hidden="true" />
+                </a>
+                <CopyEmail />
+              </div>
+            </div>
+            <ul className="contact-channels reveal">
+              <li>
+                <a href={links.github} target="_blank" rel="noreferrer">
+                  <span>01</span> GitHub
+                  <small>{links.github.replace('https://', '')}</small>
+                  <ArrowUpRight size={18} aria-hidden="true" />
+                </a>
+              </li>
+              <li>
+                <a href={links.linkedin} target="_blank" rel="noreferrer">
+                  <span>02</span> LinkedIn
+                  <small>
+                    {links.linkedin
+                      .replace('https://www.', '')
+                      .replace(/\/$/, '')}
+                  </small>
+                  <ArrowUpRight size={18} aria-hidden="true" />
+                </a>
+              </li>
+              <li>
+                <a href={links.email}>
+                  <span>03</span> E-mail
+                  <small>{email}</small>
+                  <ArrowUpRight size={18} aria-hidden="true" />
+                </a>
+              </li>
+            </ul>
           </div>
         </section>
       </main>
@@ -859,20 +721,15 @@ function App() {
       <footer className="footer">
         <div className="section-container footer-inner">
           <a className="footer-brand" href="#inicio">
-            PAULO FONTES
+            <BrandMark /> PAULO FONTES
           </a>
           <span>
-            {new Date().getFullYear()} · PAULO FONTES · DESENVOLVIMENTO DE
-            SOFTWARE · ARACAJU, BR
+            © {new Date().getFullYear()} · DESENVOLVIMENTO DE SOFTWARE ·
+            ARACAJU, BR
           </span>
-          <div>
-            <a href={links.github} target="_blank" rel="noreferrer">
-              GITHUB <ArrowUpRight size={13} />
-            </a>
-            <a href={links.linkedin} target="_blank" rel="noreferrer">
-              LINKEDIN <ArrowUpRight size={13} />
-            </a>
-          </div>
+          <a className="footer-top" href="#inicio">
+            Voltar ao topo ↑
+          </a>
         </div>
       </footer>
     </>
